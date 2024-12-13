@@ -1,6 +1,7 @@
-# Development
+# my-website
+Minimalist website portfolio and blog made using rust and dioxus.
 
-Your new bare-bones project includes minimal organization with a single `main.rs` file and a few assets.
+-------------
 
 ### Tailwind
 1. Install npm: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
@@ -23,5 +24,3 @@ To run for a different platform, use the `--platform platform` flag. E.g.
 ```bash
 dx serve --platform desktop
 ```
-
-# my-website
