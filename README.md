@@ -3,6 +3,8 @@ Minimalist website portfolio and blog made using rust and dioxus.
 
 -------------
 
+## Steps to Run
+
 ### Tailwind
 1. Install npm: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm
 2. Install the Tailwind CSS CLI: https://tailwindcss.com/docs/installation
@@ -24,3 +26,8 @@ To run for a different platform, use the `--platform platform` flag. E.g.
 ```bash
 dx serve --platform desktop
 ```
+
+-------------
+
+### Attributions
+hero image: @ginasonya99 on vecteezy
