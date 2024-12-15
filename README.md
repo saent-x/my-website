@@ -31,3 +31,4 @@ dx serve --platform desktop
 
 ### Attributions
 hero image: @ginasonya99 on vecteezy
+left & right icon: @arkinasi on flaticon
