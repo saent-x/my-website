@@ -6,20 +6,21 @@ const TOR_IMAGE: Asset = asset!("/assets/tor.png");
 #[component]
 pub fn HeroContent() -> Element{
     rsx!{
-        h1 { class: "text-white", "Hero Component!" }
         div { 
-            img{ src: TOR_IMAGE, class: "h-50 w-50" }
+            class: "flex flex-col w-[100%] items-end",
+            img{ src: TOR_IMAGE, class: "h-36 w-36 rounded-full border-4 border-black" }
         }
         div { 
-            h1 { "Vangerwua Tor" }
+            h1 { 
+                class: "text-bold text-2xl bg-gray-800 text-white p-1 px-2 rounded w-fit",
+                "Hello 👋🏾, I'm Vangerwua Tor" 
+            }
             p {
+                class: "mt-2 text-justify text-base bg-gray-800 text-white p-2 rounded w-fit",
                 "
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure 
-                dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
-                anim id est laborum
+                Welcome to my digital space! I'm excited to share my life experiences and professional 
+                journey as a Software Engineer. Dive in to explore my projects, tips, and the latest 
+                trends in tech. Enjoy your visit, find inspiration, and stay connected! 🌟
                 "
             }
         }
