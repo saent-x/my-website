@@ -1,14 +1,23 @@
 use dioxus::prelude::*;
-use crate::components::hero_content::HeroContent;
+use crate::components::{hero_content::HeroContent, latest_projects::LatestProject};
 
 #[component]
 fn Hero() -> Element {
     rsx! {
+        // Hero
         div {
             id: "hero",
             class: "flex flex-col justify-center items-center p-10 h-[350px] w-[55%] bg-black rounded-lg",
             HeroContent {  }
         }
+
+        // Featured Projects and Blog Posts
+        div { 
+            class: "w-[55%] mt-4",
+
+            LatestProject {}
+
+         }
     }
 }
 
