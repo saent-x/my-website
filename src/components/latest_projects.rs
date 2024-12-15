@@ -1,20 +1,29 @@
 use dioxus::prelude::*;
+use dioxus::logger::tracing::info;
+
+use crate::components::carousel::Carousel;
+
 
 /// A sample dioxus component
 #[component]
 pub fn LatestProject() -> Element{
     rsx!{
         h1 { 
-            class: "text-lg border-l-2 border-black mb-2",
+            class: "text-lg border-l-2 border-black mb-2 pl-1",
             "Featured Projects"
          }
         
         div { 
             // lists out the featured projects in a horizontal scroll
-            class: "flex flex-row overflow-auto",
+            class: "flex flex-row overflow-auto w-full",
 
-            ProjectContainer { name: "St. Faus", description: "A minimalist Music Player for Study and Focus" }
-            ProjectContainer { name: "St. Faus", description: "A minimalist Music Player for Study and Focus" }
+            Carousel{
+                slides_count: 2,
+                children: rsx!{
+                    ProjectContainer { name: "St. Faus", description: "A minimalist Music Player for Study and Focus" }
+                    ProjectContainer { name: "St. Faus II", description: "A minimalist Music Player for Study and Focus" }
+                }
+            }
         }
     }
 }
@@ -26,15 +35,17 @@ const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 #[component]
 fn ProjectContainer(name: String, description: String) -> Element {
     rsx!{
-        div { 
-            class: "min-w-[180px] max-w-[180px] bg-gray-200 mr-1",
-            img{ class: "w-[100%] h-[180px]", src: TMP_IMAGE }
-            
+        div {
+            class: "flex flex-row justify-between shadow border-2 border-gray-100 p-4 px-8 min-w-full w-full rounded-md",
+                
             div {
-                class: "p-1 bg-gray-800",
-                h2 { class: "mt-1 text-bold text-white text-sm", "{name}" } // project name
-                p { class: "mt-1 text-white text-xs", "{description}" }
+                class: "rounded-b-md",
+                h2 { class: "mt-1 text-bold text-black text-sm", "{name}" } // project name
+                p { class: "mt-1 text-gray-500 text-sm", "{description}" }
+
+                button { onclick: move |_| info!("navigating to github..."), class: "bg-gray-200 rounded mt-3 text-xs cursor-pointer p-1 shadow", "View Project" } // should link to github page
             }
+            img{ class: "w-[30%] h-[100px] rounded-t-md", src: TMP_IMAGE }
         }
     }
 }
