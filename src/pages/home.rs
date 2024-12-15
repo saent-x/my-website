@@ -5,7 +5,8 @@ use crate::components::hero_content::HeroContent;
 fn Hero() -> Element {
     rsx! {
         div {
-            class: "flex flex-col justify-center items-center h-[600px] w-[70%] bg-black rounded-lg",
+            id: "hero",
+            class: "flex flex-col justify-center items-center p-10 h-[350px] w-[55%] bg-black rounded-lg",
             HeroContent {  }
         }
     }

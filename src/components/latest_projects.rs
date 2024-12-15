@@ -14,7 +14,7 @@ pub fn LatestProject() -> Element{
 
 /// project_container holds the individual featured projects
 #[component]
-fn project_container(name: &str, description: &str) -> Element {
+fn project_container(name: String, description: String) -> Element {
     rsx!{
         div { 
             img{}
