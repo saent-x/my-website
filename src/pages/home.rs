@@ -7,7 +7,7 @@ fn Hero() -> Element {
         // Hero
         div {
             id: "hero",
-            class: "flex flex-col justify-center items-center p-10 h-[350px] w-[55%] bg-black rounded-lg",
+            class: "flex flex-col justify-center items-center p-10 h-[350px] w-[55%] bg-black rounded-lg shadow",
             HeroContent {  }
         }
 
@@ -16,7 +16,6 @@ fn Hero() -> Element {
             class: "w-[55%] mt-4",
 
             LatestProject {}
-
          }
     }
 }

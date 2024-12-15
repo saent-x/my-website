@@ -11,7 +11,7 @@ pub fn Layout() -> Element {
             class: "flex flex-col items-center w-[100%] h-[100%]",
             Navbar{}
             
-            Outlet::<SiteRoute> {}   
+            Outlet::<SiteRoute> {}
         }
     }
 }
