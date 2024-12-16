@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use crate::site_router::SiteRoute;
+use crate::{components::footer::Footer, site_router::SiteRoute};
 
 use super::navbar::Navbar;
 
@@ -12,6 +12,7 @@ pub fn Layout() -> Element {
             Navbar{}
             
             Outlet::<SiteRoute> {}
+            Footer {}
         }
     }
 }
