@@ -59,7 +59,7 @@ pub fn Carousel(props: CarouselProps) -> Element {
                 for i in 0..slides_count{
                     div { 
                         class: "h-[5px] w-[5px] m-[2px] rounded-full bg-black transition-all",
-                        class: if current_slide() == i { "p-1" } else { "bg-opacity-50" }
+                        class: if current_slide() == i { "p-[3px]" } else { "bg-opacity-50" }
                      }
                 }
              }
