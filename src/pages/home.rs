@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use crate::components::{hero_content::HeroContent, latest_projects::LatestProject};
+use crate::components::{hero_content::HeroContent, latest_blog::LatestBlog, latest_projects::LatestProject};
 
 #[component]
 fn Hero() -> Element {
@@ -16,6 +16,7 @@ fn Hero() -> Element {
             class: "w-[55%] mt-4",
 
             LatestProject {}
+            LatestBlog {}
          }
     }
 }

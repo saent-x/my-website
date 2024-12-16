@@ -9,7 +9,7 @@ use crate::components::carousel::Carousel;
 pub fn LatestProject() -> Element{
     rsx!{
         h1 { 
-            class: "text-lg border-l-2 border-black mb-2 pl-1",
+            class: "text-lg border-l-2 border-black mb-4 mt-4 pl-1",
             "Featured Projects"
          }
         
@@ -31,7 +31,7 @@ pub fn LatestProject() -> Element{
 // temporary image for design purposes
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 
-/// project_container holds the individual featured projects
+/// ProjectContainer holds the individual featured projects
 #[component]
 fn ProjectContainer(name: String, description: String) -> Element {
     rsx!{
@@ -43,7 +43,7 @@ fn ProjectContainer(name: String, description: String) -> Element {
                 h2 { class: "mt-1 text-bold text-black text-sm", "{name}" } // project name
                 p { class: "mt-1 text-gray-500 text-sm", "{description}" }
 
-                button { onclick: move |_| info!("navigating to github..."), class: "bg-gray-200 rounded mt-3 text-xs cursor-pointer p-1 shadow", "View Project" } // should link to github page
+                button { onclick: move |_| info!("navigating to github..."), class: "bg-gray-800 text-white rounded mt-3 text-xs cursor-pointer p-1 shadow", "View Project" } // should link to github page
             }
             img{ class: "w-[30%] h-[100px] rounded-t-md", src: TMP_IMAGE }
         }
