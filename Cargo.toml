@@ -10,6 +10,10 @@ edition = "2021"
 chrono = "0.4.39"
 dioxus = { version = "0.6.0", features = ["router"] }
 
+[lib]
+name = "site_core"
+path = "core/src/lib.rs"
+
 [features]
 default = ["web"]
 web = ["dioxus/web"]
