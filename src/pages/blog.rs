@@ -1,13 +1,12 @@
 use dioxus::prelude::*;
 use dioxus::logger::tracing::info;
-use crate::SiteRoute;
 
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 
 /// Blog page
 #[component]
-pub fn Blog(id: i32) -> Element {
+pub fn BlogPage() -> Element {
     rsx! {
         div {
             class: "",
@@ -54,6 +53,7 @@ fn BlogPost(name: String, description: String, category: String) -> Element {
                 
             div {
                 class: "rounded-b-md",
+                
                 h3 { class: "text-gray-500 text-sm", "{category}" }
                 h2 { class: "mt-1 text-bold text-black text-sm", "{name}" } // project name
                 p { class: "mt-1 text-gray-500 text-sm", "{description}" }
