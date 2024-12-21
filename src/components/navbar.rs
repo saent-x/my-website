@@ -15,10 +15,10 @@ pub fn Navbar() -> Element {
                 img { class: "h-4 w-10", src: LOGO_SVG }
              
                 div { 
-                    Link { to: SiteRoute::Home {}, "Home" }
-                    Link { to: SiteRoute::Blog { id: 1 }, "Blog" }
-                    Link { to: SiteRoute::Blog { id: 1 }, "About" }
-                    Link { to: SiteRoute::Blog { id: 1 }, "Contact" }
+                    Link { to: SiteRoute::HomePage {}, "Home" }
+                    Link { to: SiteRoute::BlogPage {}, "Blog" }
+                    Link { to: SiteRoute::BlogPage {}, "About" }
+                    Link { to: SiteRoute::BlogPage {}, "Contact" }
                 }
             }
         }

@@ -23,7 +23,7 @@ fn Hero() -> Element {
 
 /// Home page
 #[component]
-pub fn Home() -> Element {
+pub fn HomePage() -> Element {
     rsx! {
         Hero {}
     }

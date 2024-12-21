@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 #[component]
-pub fn About() -> Element {
+pub fn AboutPage() -> Element {
     rsx!{
         "About Page!"
     }
