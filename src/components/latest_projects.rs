@@ -45,7 +45,7 @@ fn ProjectContainer(name: String, description: String) -> Element {
 
                 button { onclick: move |_| info!("navigating to github..."), class: "bg-gray-800 text-white rounded mt-3 text-xs cursor-pointer p-1 shadow", "View Project" } // should link to github page
             }
-            img{ class: "w-[30%] h-[100px] rounded-t-md", src: TMP_IMAGE }
+            img{ class: "w-[25%] h-[100px] rounded-t-md", src: TMP_IMAGE }
         }
     }
 }
