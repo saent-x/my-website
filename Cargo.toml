@@ -9,18 +9,13 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.39"
 dioxus = { version = "0.6.0", features = ["router"] }
-
-[lib]
-name = "site_core"
-path = "core/src/lib.rs"
+site_core = { path = "./core" }
 
 [features]
 default = ["web"]
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
-
-[profile]
 
 [profile.wasm-dev]
 inherits = "dev"

@@ -62,3 +62,7 @@ body {
     cursor: pointer;
     color: grey;
 }
+
+.no-tailwindcss * {
+    all: revert
+}
