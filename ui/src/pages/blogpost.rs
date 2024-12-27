@@ -1,17 +1,14 @@
 use dioxus::{logger::tracing::info, prelude::*};
-use site_core::services::blog_post_service::BlogPost;
-use crate::prelude::*;
-
 
 #[component]
 pub fn BlogPostPage(blog_post_id: u32) -> Element {
-    // get post from db based on id
+    // TODO: get post from db based on id - server would handle md to html conversion and send back
     info!("[INFO]: blog_post id -> {}", blog_post_id);
 
-    let blog_post = BlogPost::new(1, "John", "10-12-2024", "sample title", "sample description", "#programming", SAMPLE_MD.to_string());
+    // let blog_post = BlogPost::new(1, "John", "10-12-2024", "sample title", "sample description", "#programming", SAMPLE_MD.to_string());
     
     // convert post to html
-    let html_repr_post = blog_post.convert_content_to_html();
+    let html_repr_post: &str = "# Heading h1";
 
     rsx!(
         div { 

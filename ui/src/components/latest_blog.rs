@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use dioxus::logger::tracing::info;
 
 use crate::site_router::SiteRoute;
 

@@ -1,28 +1,7 @@
-[package]
-name = "my-website"
-version = "0.1.0"
-authors = ["saent-x <torsxperience@outlook.com>"]
-edition = "2021"
+[workspace]
+members = [
+    "ui",
+    "server"
+]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-chrono = "0.4.39"
-dioxus = { version = "0.6.0", features = ["router"] }
-site_core = { path = "./core" }
-
-[features]
-default = ["web"]
-web = ["dioxus/web"]
-desktop = ["dioxus/desktop"]
-mobile = ["dioxus/mobile"]
-
-[profile.wasm-dev]
-inherits = "dev"
-opt-level = 1
-
-[profile.server-dev]
-inherits = "dev"
-
-[profile.android-dev]
-inherits = "dev"
+resolver = "2"

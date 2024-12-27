@@ -1,6 +1,5 @@
-use dioxus::{logger::tracing::info, prelude::*};
-use crate::{components::paginator::Paginator, site_router::SiteRoute};
-use site_core::services::blog_post_service::BlogPostDTO;
+use dioxus::prelude::*;
+use crate::{components::paginator::Paginator, models::dtos::BlogPostDTO, site_router::SiteRoute};
 
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
@@ -9,9 +8,9 @@ const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 /// Blog page
 #[component]
 pub fn BlogPage() -> Element {
-    let mut posts_per_page: Signal<usize> = use_signal(|| 4);
     let mut current_page: Signal<usize> = use_signal(|| 1);
     let mut loading_state: Signal<bool> = use_signal(|| false);
+    let posts_per_page: usize = 4;
 
     let blog_posts: Vec<BlogPostDTO<'_>> = vec![
         BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 1", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
@@ -28,8 +27,8 @@ pub fn BlogPage() -> Element {
     ];
 
     // get current posts
-    let mut index_of_last_post = current_page() * posts_per_page();
-    let index_of_first_post = index_of_last_post - posts_per_page();
+    let mut index_of_last_post = current_page() * posts_per_page;
+    let index_of_first_post = index_of_last_post - posts_per_page;
 
     // out of range check
     index_of_last_post = match index_of_last_post > blog_posts.len() {
@@ -63,7 +62,7 @@ pub fn BlogPage() -> Element {
                 }
                 
                 Paginator{
-                    posts_per_page: posts_per_page().try_into().unwrap(), 
+                    posts_per_page: posts_per_page.try_into().unwrap(), 
                     total_posts: blog_posts.len().try_into().unwrap(),
                     paginate: move |page_number: u32| { 
                         loading_state.set(true);

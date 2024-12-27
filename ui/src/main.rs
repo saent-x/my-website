@@ -1,11 +1,13 @@
-mod site_router;
-mod prelude;
 mod components;
+mod error;
+mod models;
 mod pages;
+mod prelude;
+mod site_router;
 
 use crate::site_router::SiteRoute;
-use dioxus::prelude::*;
 use dioxus::logger::tracing::Level;
+use dioxus::prelude::*;
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 const MAIN_CSS: Asset = asset!("/assets/main.css");
@@ -20,9 +22,9 @@ fn main() {
 fn App() -> Element {
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
-        document::Link { rel: "stylesheet", href: MAIN_CSS } 
+        document::Link { rel: "stylesheet", href: MAIN_CSS }
         document::Link { rel: "stylesheet", href: TAILWIND_CSS }
-        
+
         Router::<SiteRoute> {}
     }
 }

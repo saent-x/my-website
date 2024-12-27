@@ -1,6 +1,5 @@
 use dioxus::prelude::*;
-
-const TOR_IMAGE: Asset = asset!("/assets/tor.png");
+use crate::prelude::*;
 
 /// HeroContent component for the Hero component
 #[component]
