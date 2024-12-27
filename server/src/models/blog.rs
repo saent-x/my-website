@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub struct CreateBlogPost {
     pub author: String,
     pub title: String,
+    pub date: String,
     pub description: String,
     pub category: String,
     pub content: String

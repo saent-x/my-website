@@ -5436,13 +5436,16 @@ name = "server"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "chrono",
  "dotenv",
  "pulldown-cmark",
  "serde",
  "serde_json",
  "surrealdb",
+ "thiserror 2.0.9",
  "tokio",
  "tower-http",
+ "uuid",
  "validator",
 ]
 
