@@ -1,5 +1,4 @@
 mod components;
-mod error;
 mod models;
 mod pages;
 mod prelude;
