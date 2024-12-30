@@ -11,7 +11,7 @@ pub struct Database{
 impl Database {
     pub async fn init() -> Result<Self, Error>{
         // load env variables
-        let remote_url = env::var("SURREAL_REMOTE_URL").expect("cannot find variable"); // intentional panic
+        let remote_url = env::var("SURREAL_REMOTE_URL").expect("cannot find variable");
         let db_name = env::var("SURREAL_DB").expect("cannot find variable");
         let user = env::var("SURREAL_USER").expect("cannot find variable");
         let pass = env::var("SURREAL_PASSWORD").expect("cannot find variable");

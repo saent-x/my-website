@@ -8,7 +8,7 @@ mod util;
 
 use std::sync::Arc;
 
-use axum::{ http::{ header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}, HeaderValue, Method, }, response::{Html, IntoResponse}, routing::{get, post}, Router,};
+use axum::{ http::{ header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}, HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Router};
 use db::Database;
 use dotenv::dotenv;
 use handlers::blog_handler::{create_blog_post, get_blog_post_by_id, get_blog_posts, health_check};
@@ -40,15 +40,8 @@ async fn main() -> surrealdb::Result<()> {
 async fn load_router(app_state: Arc<Database>, cors: CorsLayer) -> Router {
     Router::new()
         .route("/api/health", get(health_check))
-        .route(
-            "/api/blog",
-            post(create_blog_post)
-            .get(get_blog_posts)
-        )
-        .route(
-            "/api/blog/:id",
-            get(get_blog_post_by_id)
-        )
+        .route("/api/blog", post(create_blog_post).get(get_blog_posts))
+        .route("/api/blog/:id", get(get_blog_post_by_id))
         .with_state(app_state)
         .layer(cors)
 }

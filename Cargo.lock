@@ -3700,6 +3700,8 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "dioxus",
+ "getrandom 0.2.15",
+ "rand 0.8.5",
  "serde",
 ]
 
