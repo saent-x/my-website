@@ -1,6 +1,6 @@
-use dioxus::prelude::*;
+use dioxus:: prelude::*;
 use rand::Rng;
-use crate::{components::paginator::Paginator, models::dtos::BlogPostDTO, site_router::SiteRoute};
+use crate::{components::paginator::Paginator, models::dtos::{ApiResponse, BlogPostDTO}, services::api_calls::{get_posts, get_posts_count}, site_router::SiteRoute};
 
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
@@ -12,30 +12,35 @@ pub fn BlogPage() -> Element {
     let mut current_page: Signal<usize> = use_signal(|| 1);
     let mut loading_state: Signal<bool> = use_signal(|| false);
     let posts_per_page: usize = 4;
-
-    let blog_posts: Vec<BlogPostDTO<'_>> = vec![
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 1", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 2", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 3", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 4", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 5", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 6", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 7", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 8", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 9", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 10", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" },
-        BlogPostDTO {id:1, author: "Johnpaul", date: "10-12-2024", title: "Exploring the Wonders of Rust 11", description: "Discover the power and versatility of Rust programming with this comprehensive introduction! 🚀", category: "#programming" }
-    ];
+    
+    // get all blog posts from api
+    let res = use_resource(move || async move {
+        let page = current_page();
+        
+        (get_posts_count()
+            .await, 
+        get_posts(page, posts_per_page)
+            .await)
+    });
+        
+    let res_option = &*res.read_unchecked();
+    let res_result = match res_option{
+        Some((count, data)) => (count, data),
+        None => (&ApiResponse::error(), &ApiResponse::error()) // ??
+    };
+    
+    let (count_res, blog_posts_res) = res_result;
+    let blog_posts = &blog_posts_res.data;
 
     // get current posts
-    let mut index_of_last_post = current_page() * posts_per_page;
-    let index_of_first_post = index_of_last_post - posts_per_page;
+    // let mut index_of_last_post = current_page() * posts_per_page;
+    // let index_of_first_post = index_of_last_post - posts_per_page;
 
-    // out of range check
-    index_of_last_post = match index_of_last_post > blog_posts.len() {
-        true => blog_posts.len(),
-        false => index_of_last_post
-    };
+    // // out of range check
+    // index_of_last_post = match index_of_last_post > blog_posts.len() {
+    //     true => blog_posts.len(),
+    //     false => index_of_last_post
+    // };
 
     rsx! {
         div {
@@ -57,14 +62,14 @@ pub fn BlogPage() -> Element {
                 class: "mt-8",
 
                 if !loading_state() {
-                    for blog_post in &blog_posts[index_of_first_post..index_of_last_post] {
-                        BlogPostItem { id: blog_post.id, title: blog_post.title, description: blog_post.description, category: blog_post.category }
+                    for blog_post in &blog_posts { // [index_of_first_post..index_of_last_post]
+                        BlogPostItem { uuid: &blog_post.uuid, title: &blog_post.title, description: &blog_post.description, category: &blog_post.category }
                     }
                 }
 
                 Paginator{
                     posts_per_page: posts_per_page.try_into().unwrap(),
-                    total_posts: blog_posts.len().try_into().unwrap(),
+                    total_posts: count_res.data,
                     paginate: move |page_number: u32| {
                         loading_state.set(true);
                         current_page.set(page_number.try_into().unwrap());
@@ -97,7 +102,7 @@ fn Category(name: String) -> Element {
 
 /// BlogPost holds the individual blog post information
 #[component]
-fn BlogPostItem(id: u32, title: String, description: String, category: String) -> Element {
+fn BlogPostItem(uuid: String, title: String, description: String, category: String) -> Element {
     rsx!{
         div {
             class: "flex flex-row justify-between mb-5 py-4 min-w-full w-full rounded-md",
@@ -110,7 +115,7 @@ fn BlogPostItem(id: u32, title: String, description: String, category: String) -
                 p { class: "mt-1 text-gray-500 text-sm", "{description}" }
 
                 Link {
-                    to: SiteRoute::BlogPostPage { blog_post_id: id },
+                    to: SiteRoute::BlogPostPage { blog_post_id: uuid },
                     button { class: "bg-gray-800 text-white rounded mt-3 text-xs cursor-pointer p-1 shadow", "Read More" }
                 }
             }

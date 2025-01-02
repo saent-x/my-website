@@ -26,5 +26,5 @@ pub enum SiteRoute {
     ContactPage { },
     
     #[route("/blog/:blog_post_id")]
-    BlogPostPage {blog_post_id: u32}
+    BlogPostPage {blog_post_id: String}
 }

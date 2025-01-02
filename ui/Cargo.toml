@@ -9,8 +9,11 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.39"
 dioxus = { version = "0.6.1", features = ["router"] }
+dotenvy = "0.15.7"
+dotenvy_macro = "=0.15.7"
 getrandom = { version = "0.2", features = ["js"] }
 rand = "0.8.5"
+reqwest = { version = "0.12.11", features = ["json"] }
 serde = { version = "1.0.216", features = ["derive"] }
 
 [features]

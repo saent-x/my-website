@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
+use dotenvy_macro::dotenv;
 
 pub const TOR_IMAGE: Asset = asset!("/assets/tor.png");
-
+pub const API_URL: &str = dotenv!("API_URL");
 pub const SAMPLE_MD: &str = r#"# Exploring the Wonders of Rust
 Welcome to my blog! Today, I'm excited to dive into the world of Rust programming. Whether you're a seasoned developer or just starting out, Rust offers a unique blend of performance and safety that's hard to beat.
 

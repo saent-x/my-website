@@ -6,7 +6,7 @@ pub fn Paginator(posts_per_page: u32, total_posts: u32, paginate: EventHandler<u
     let pag_btn_count = total_posts.div_ceil(posts_per_page);
 
     rsx!{
-        div { 
+        div {
             class: "flex flex-row justify-center w-full",
             div { 
                 class: "mx-5",
@@ -22,5 +22,18 @@ pub fn Paginator(posts_per_page: u32, total_posts: u32, paginate: EventHandler<u
                 }
              }
          }
+    }
+}
+
+#[component]
+pub fn PaginatorII() -> Element {
+    
+    rsx!{
+        div {
+            class: "flex flex-row justify-between w-[100%]",
+            button { 
+                
+            }
+        }
     }
 }

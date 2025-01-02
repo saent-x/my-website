@@ -17,6 +17,23 @@ pub async fn health_check() -> impl IntoResponse {
     Json(hc_response)
 }
 
+pub async fn get_total_posts_count(State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
+    let mut db_query = db.client.query("SELECT count() FROM blog_posts GROUP ALL")
+        .await?;
+    
+    let result:Option<u32> = db_query.take("count")?;
+    let total_count = match result {
+        Some(value) => value,
+        None => 0
+    };
+    
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), result)))
+}
+
+pub async fn get_latest_posts(State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
+    todo!()
+}
+
 pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
     let mut page = query.page.unwrap_or_else(|| 1);
     page = if query.page.unwrap_or_else(|| 1) == 0 { 1 } else { page }; // prevents assigning page 0

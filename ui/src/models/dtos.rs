@@ -1,10 +1,30 @@
+use serde::Deserialize;
 
-#[derive(Debug, Clone)]
-pub struct BlogPostDTO<'a> {
-    pub id: u32,
-    pub author: &'a str,
-    pub date: &'a str,
-    pub title: &'a str,
-    pub description: &'a str,
-    pub category: &'a str,
+
+#[derive(Default, Debug, Clone, Deserialize)]
+pub struct BlogPostDTO {
+    pub uuid: String,
+    pub author: String,
+    pub date: String,
+    pub title: String,
+    pub description: String,
+    pub category: String,
+    pub content: Option<String>
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct ApiResponse<T> {
+    pub status: String,
+    pub code: String,
+    pub data: T
+}
+
+impl<T: Default> ApiResponse<T> {
+    pub fn error() -> Self{
+        Self {
+            status: "error".to_string(),
+            code: "500".to_string(),
+            data: T::default() // applies the default of the generic value
+        }
+    }
 }
