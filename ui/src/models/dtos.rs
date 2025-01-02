@@ -8,7 +8,7 @@ pub struct BlogPostDTO {
     pub date: String,
     pub title: String,
     pub description: String,
-    pub category: String,
+    pub category: Vec<String>,
     pub content: Option<String>
 }
 

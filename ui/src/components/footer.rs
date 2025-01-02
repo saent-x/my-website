@@ -15,10 +15,21 @@ pub fn Footer() -> Element {
             h3 { class: "text-sm", "Vangerwua Tor @{current_year}" }
             div { 
                 class: "flex flex-row justify-center mt-2 mb-4",
-
-                img { class: "h-5 w-5 mr-1 cursor-pointer", src: GITHUB_IMG }
-                img { class: "h-5 w-5 mr-1 cursor-pointer", src: DISCORD_IMG }
-                img { class: "h-5 w-5 mr-1 cursor-pointer", src: LINKEDIN_IMG }
+                
+                Link {
+                    to: "https://github.com/saent-x",
+                    img { class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", src: GITHUB_IMG }                    
+                }
+                
+                // Link {
+                //     to: "",
+                //     img { class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", src: DISCORD_IMG }
+                // }
+                
+                Link {
+                    to: "https://www.linkedin.com/in/vanjp/",
+                    img { class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", src: LINKEDIN_IMG }
+                }
             }
          }
     }

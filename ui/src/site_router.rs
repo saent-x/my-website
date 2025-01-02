@@ -16,7 +16,7 @@ pub enum SiteRoute {
     #[route("/")]
     HomePage {},
 
-    #[route("/blog_posts")]
+    #[route("/blog")]
     BlogPage { },
 
     #[route("/about")]
@@ -24,7 +24,7 @@ pub enum SiteRoute {
 
     #[route("/contact")]
     ContactPage { },
-    
+
     #[route("/blog/:blog_post_id")]
     BlogPostPage {blog_post_id: String}
 }

@@ -4,6 +4,7 @@ mod pages;
 mod prelude;
 mod site_router;
 mod services;
+mod util;
 
 use crate::site_router::SiteRoute;
 use dioxus::logger::tracing::Level;

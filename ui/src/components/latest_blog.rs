@@ -30,10 +30,9 @@ pub fn LatestBlog() -> Element {
             // lists out the featured projects in a horizontal scroll
             class: "flex flex-col overflow-auto w-full",
             
-            for post in 
-            BlogContainer { uuid: "1".to_string(), name: "Writing a simple web app using the dioxus framework", description: "In this tutorial, I'll walk you through the process of using the dioxus framework to build web apps" }
-            BlogContainer { uuid: "2".to_string(), name: "Writing a simple web app using the dioxus framework", description: "In this tutorial, I'll walk you through the process of using the dioxus framework to build web apps" }
-            BlogContainer { uuid: "3".to_string(), name: "Writing a simple web app using the dioxus framework", description: "In this tutorial, I'll walk you through the process of using the dioxus framework to build web apps" }
+            for post in latest_posts {
+                BlogContainer { uuid: &post.uuid, title: &post.title, description: &post.description }
+            }
 
             Link {
                 to: SiteRoute::BlogPage {},
@@ -49,14 +48,14 @@ pub fn LatestBlog() -> Element {
 
 /// BlogContainer holds the individual blog post information
 #[component]
-fn BlogContainer(uuid: String, name: String, description: String) -> Element {
+fn BlogContainer(uuid: String, title: String, description: String) -> Element {
     rsx!{
         div {
             class: "flex flex-row justify-between shadow border-2 border-gray-100 mb-5 p-4 px-8 min-w-full w-full rounded-md",
 
             div {
                 class: "rounded-b-md",
-                h2 { class: "mt-1 text-bold text-black text-sm", "{name}" } // project name
+                h2 { class: "mt-1 text-bold text-black text-sm", "{title}" } // project name
                 p { class: "mt-1 text-gray-500 text-sm", "{description}" }
 
                 Link {

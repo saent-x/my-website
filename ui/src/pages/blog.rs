@@ -51,8 +51,7 @@ pub fn BlogPage() -> Element {
             div {
                 class: "flex flex-row mt-4",
 
-                Category { name: "All" }
-                Category { name: "Tech" }
+                Category { name: "Tech" } // should be clickable
                 Category { name: "Programming" }
                 Category { name: "Science" }
                 Category { name: "General" }
@@ -63,7 +62,7 @@ pub fn BlogPage() -> Element {
 
                 if !loading_state() {
                     for blog_post in &blog_posts { // [index_of_first_post..index_of_last_post]
-                        BlogPostItem { uuid: &blog_post.uuid, title: &blog_post.title, description: &blog_post.description, category: &blog_post.category }
+                        BlogPostItem { uuid: &blog_post.uuid, title: &blog_post.title, description: &blog_post.description, categories: blog_post.category.clone() }
                     }
                 }
 
@@ -102,15 +101,20 @@ fn Category(name: String) -> Element {
 
 /// BlogPost holds the individual blog post information
 #[component]
-fn BlogPostItem(uuid: String, title: String, description: String, category: String) -> Element {
+fn BlogPostItem(uuid: String, title: String, description: String, categories: Vec<String>) -> Element {
     rsx!{
         div {
             class: "flex flex-row justify-between mb-5 py-4 min-w-full w-full rounded-md",
 
             div {
                 class: "rounded-b-md",
-
-                h3 { class: "text-gray-500 text-sm", "{category}" }
+                
+                div { 
+                    class: "flex flex-row",
+                    for category in categories{
+                       h3 { class: "text-gray-500 pr-2 text-sm", "#{category}" } 
+                    }
+                }
                 h2 { class: "mt-1 text-bold text-black text-sm", "{title}" } // project name
                 p { class: "mt-1 text-gray-500 text-sm", "{description}" }
 

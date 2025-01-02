@@ -3775,6 +3775,7 @@ dependencies = [
  "rand 0.8.5",
  "reqwest",
  "serde",
+ "web-sys",
 ]
 
 [[package]]

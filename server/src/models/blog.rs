@@ -8,7 +8,7 @@ pub struct BlogPostSchema {
     pub title: String,
     pub date: String,
     pub description: String,
-    pub category: String,
+    pub category: Vec<String>,
     pub content: Option<String>,
 }
 
@@ -18,7 +18,7 @@ pub struct GetBlogPost {
     pub title: String,
     pub date: String,
     pub description: String,
-    pub category: String,
+    pub category: Vec<String>,
     pub content: String,
 }
 
@@ -30,40 +30,37 @@ pub struct BlogPost {
     pub date: String,
     pub title: String,
     pub description: String,
-    pub category: String,
+    pub category: Vec<String>,
     pub content: String,
 }
 
-impl BlogPost {
-    pub fn new<'a>(
-        uuid: &'a str,
-        author: &'a str,
-        date: &'a str,
-        title: &'a str,
-        description: &'a str,
-        category: &'a str,
-        content: String,
-    ) -> Self {
-        Self {
-            uuid: uuid.to_string(),
-            author: author.to_string(),
-            date: date.to_string(),
-            title: title.to_string(),
-            description: description.to_string(),
-            category: category.to_string(),
-            content,
-        }
-    }
+impl BlogPostSchema {
+    // pub fn new<'a>(uuid: &'a str, author: &'a str, date: &'a str, title: &'a str, description: &'a str, category: Vec<String>, content: String) -> Self {
+    //     Self {
+    //         uuid: uuid.to_string(),
+    //         author: author.to_string(),
+    //         date: date.to_string(),
+    //         title: title.to_string(),
+    //         description: description.to_string(),
+    //         category,
+    //         content,
+    //     }
+    // }
 
-    pub fn convert_content_to_html(&self) -> String {
+    pub fn convert_content_to_html(&mut self) {
         let mut parser_options = Options::empty();
         parser_options.insert(Options::ENABLE_STRIKETHROUGH);
+        
+        let content = match &self.content{
+            Some(value) => value.clone(),
+            None => "".to_string()
+        };
 
-        let parser = Parser::new_ext(&self.content, parser_options);
+        let parser = Parser::new_ext(&content, parser_options);
 
         let mut html_output = String::new();
         html::push_html(&mut html_output, parser);
 
-        html_output
+        self.content = Some(html_output);
     }
 }
