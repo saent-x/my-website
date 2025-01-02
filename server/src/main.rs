@@ -11,7 +11,7 @@ use std::sync::Arc;
 use axum::{ http::{ header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}, HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Router};
 use db::Database;
 use dotenv::dotenv;
-use handlers::blog_handler::{create_blog_post, get_blog_post_by_id, get_blog_posts, get_total_posts_count, health_check};
+use handlers::blog_handler::{create_blog_post, get_blog_post_by_id, get_blog_posts, get_latest_posts, get_total_posts_count, health_check};
 use tower_http::cors::CorsLayer;
 
 #[tokio::main]
@@ -43,6 +43,7 @@ async fn load_router(app_state: Arc<Database>, cors: CorsLayer) -> Router {
         .route("/api/blog", post(create_blog_post).get(get_blog_posts))
         .route("/api/blog/:id", get(get_blog_post_by_id))
         .route("/api/blog/count", get(get_total_posts_count))
+        .route("/api/blog/latest_posts", get(get_latest_posts))
         .with_state(app_state)
         .layer(cors)
 }

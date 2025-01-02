@@ -31,7 +31,12 @@ pub async fn get_total_posts_count(State(db): State<Arc<Database>>) -> Result<Js
 }
 
 pub async fn get_latest_posts(State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
-    todo!()
+    let mut db_query = db.client.query("SELECT * OMIT content FROM blog_posts ORDER BY date DESC LIMIT 3")
+        .await?;
+    
+    let results: Vec<BlogPostSchema> = db_query.take(0)?;
+    
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()),results)))
 }
 
 pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
@@ -79,7 +84,7 @@ pub async fn create_blog_post(State(db): State<Arc<Database>>) -> Json<Value> {
         date: current_dt,
         description: "A brief and concise introduction into creating webapps using the dioxus cross platform framework".to_string(),
         category: "programming".to_string(),
-        content: "# What is Dioxus?".to_string()
+        content: Some("# What is Dioxus?".to_string())
     }).await;
 
     match record {

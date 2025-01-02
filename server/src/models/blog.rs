@@ -9,7 +9,7 @@ pub struct BlogPostSchema {
     pub date: String,
     pub description: String,
     pub category: String,
-    pub content: String,
+    pub content: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

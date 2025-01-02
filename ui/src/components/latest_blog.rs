@@ -1,11 +1,25 @@
 use dioxus::prelude::*;
 
-use crate::site_router::SiteRoute;
+use crate::{models::dtos::ApiResponse, services::api_calls::get_latest_posts, site_router::SiteRoute};
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 
 #[component]
 pub fn LatestBlog() -> Element {
+    
+    let res = use_resource(|| async move {
+        get_latest_posts()
+            .await
+    });
+    
+    let res_option = &*res.read_unchecked();
+    let res_result = match res_option {
+        Some(data) => data,
+        None => &ApiResponse::error()
+    };
+    
+    let latest_posts = &res_result.data;
+    
     rsx!{
         h1 {
             class: "text-lg border-l-2 border-black mb-4 mt-4 pl-1",
@@ -15,7 +29,8 @@ pub fn LatestBlog() -> Element {
          div {
             // lists out the featured projects in a horizontal scroll
             class: "flex flex-col overflow-auto w-full",
-
+            
+            for post in 
             BlogContainer { uuid: "1".to_string(), name: "Writing a simple web app using the dioxus framework", description: "In this tutorial, I'll walk you through the process of using the dioxus framework to build web apps" }
             BlogContainer { uuid: "2".to_string(), name: "Writing a simple web app using the dioxus framework", description: "In this tutorial, I'll walk you through the process of using the dioxus framework to build web apps" }
             BlogContainer { uuid: "3".to_string(), name: "Writing a simple web app using the dioxus framework", description: "In this tutorial, I'll walk you through the process of using the dioxus framework to build web apps" }
