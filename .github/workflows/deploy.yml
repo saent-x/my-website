@@ -1,0 +1,13 @@
+name: Deploy Website to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: 
+  deploy:
+    runs-on: ubuntu-latest
+      
