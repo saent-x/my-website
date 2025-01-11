@@ -1,0 +1,34 @@
+# container orchestration
+services:
+  ui:
+    image: my-website-ui
+    container_name: my-website-ui
+    pull_policy: never # stops from pulling from dockerhub/registry
+    build:
+      context: ./ui
+      dockerfile: Dockerfile
+      target: client
+      args:
+        - API_URL=$API_URL
+    environment:
+      - API_URL=$API_URL
+    ports:
+      - 80:80
+  
+  server:
+    image: my-website-server
+    container_name: my-website-server
+    pull_policy: never
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: server
+    environment:
+      - SURREAL_REMOTE_URL=$SURREAL_REMOTE_URL
+      - SURREAL_DB=$SURREAL_DB
+      - SURREAL_USER=$SURREAL_USER
+      - SURREAL_PASSWORD=$SURREAL_PASSWORD
+      - SURREAL_NAMESPACE=$SURREAL_NAMESPACE
+      - UI_URL=$UI_URL
+    ports:
+      - 8000:8000
