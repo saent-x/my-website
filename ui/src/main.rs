@@ -9,10 +9,7 @@ mod util;
 use crate::site_router::SiteRoute;
 use dioxus::logger::tracing::Level;
 use dioxus::prelude::*;
-
-const FAVICON: Asset = asset!("/assets/favicon.ico");
-const MAIN_CSS: Asset = asset!("/assets/main.css");
-const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
+use prelude::{FAVICON, MAIN_CSS, TAILWIND_CSS};
 
 
 fn main() {
