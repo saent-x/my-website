@@ -35,17 +35,17 @@ pub struct BlogPost {
 }
 
 impl BlogPostSchema {
-    // pub fn new<'a>(uuid: &'a str, author: &'a str, date: &'a str, title: &'a str, description: &'a str, category: Vec<String>, content: String) -> Self {
-    //     Self {
-    //         uuid: uuid.to_string(),
-    //         author: author.to_string(),
-    //         date: date.to_string(),
-    //         title: title.to_string(),
-    //         description: description.to_string(),
-    //         category,
-    //         content,
-    //     }
-    // }
+    pub fn new<'a>(uuid: &'a str, author: &'a str, date: &'a str, title: &'a str, description: &'a str, category: Vec<String>, content: String) -> Self {
+        Self {
+            uuid: uuid.to_string(),
+            author: author.to_string(),
+            date: date.to_string(),
+            title: title.to_string(),
+            description: description.to_string(),
+            category,
+            content: Some(content),
+        }
+    }
 
     pub fn convert_content_to_html(&mut self) {
         let mut parser_options = Options::empty();

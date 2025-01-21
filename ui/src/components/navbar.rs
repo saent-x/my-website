@@ -26,22 +26,22 @@ pub fn Navbar() -> Element {
 
                 div {
                     Link {
-                        class: if active_page == "" { "border-b-4 border-b-black"} else{""},
+                        class: if active_page == "" { "border-b-4 border-b-black text-sm"} else{""},
                         to: SiteRoute::HomePage{},
                         "Home"
                     }
                     Link {
-                        class: if active_page == "blog" { "border-b-4 border-b-black"} else{""},
+                        class: if active_page == "blog" { "border-b-4 border-b-black text-sm"} else{""},
                         to: SiteRoute::BlogPage{},
                         "Blog"
                     }
                     Link {
-                        class: if active_page == "about" { "border-b-4 border-b-black"} else{""},
+                        class: if active_page == "about" { "border-b-4 border-b-black text-sm"} else{""},
                         to: SiteRoute::AboutPage{},
                         "About"
                     }
                     Link {
-                        class: if active_page == "contact" { "border-b-4 border-b-black"} else{""},
+                        class: if active_page == "contact" { "border-b-4 border-b-black text-sm"} else{""},
                         to: SiteRoute::ContactPage{},
                         "Contact"
                     }
