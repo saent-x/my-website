@@ -18,9 +18,11 @@ pub fn BlogPage() -> Element {
         let page = current_page();
         
         (get_posts_count()
-            .await, 
+            .await
+            .expect("[ERROR] failed to retrieve count"),
         get_posts(page, posts_per_page)
-            .await)
+            .await
+            .expect("[ERROR] failed to retrieve blog posts"))
     });
         
     let res_option = &*res.read_unchecked();
@@ -31,16 +33,6 @@ pub fn BlogPage() -> Element {
     
     let (count_res, blog_posts_res) = res_result;
     let blog_posts = &blog_posts_res.data;
-
-    // get current posts
-    // let mut index_of_last_post = current_page() * posts_per_page;
-    // let index_of_first_post = index_of_last_post - posts_per_page;
-
-    // // out of range check
-    // index_of_last_post = match index_of_last_post > blog_posts.len() {
-    //     true => blog_posts.len(),
-    //     false => index_of_last_post
-    // };
 
     rsx! {
         div {

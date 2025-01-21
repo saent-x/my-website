@@ -22,6 +22,8 @@ async fn main() -> surrealdb::Result<()> {
     let db = Database::init().await.expect("failed to connect to db");
     
     let ui_url = env::var("UI_URL").expect("cannot find variable");
+    println!("UI_URL: {}", ui_url);
+    
     let cors: CorsLayer = CorsLayer::new()
         .allow_origin(ui_url.parse::<HeaderValue>().unwrap())
         .allow_methods([Method::GET, Method::POST, Method::PATCH, Method::DELETE])

@@ -1,5 +1,9 @@
+use dioxus::logger::tracing::info;
+
 
 pub fn get_page_from_url(href: &str) -> &str{
+    info!("href: {href}");
+    
     let arr: Vec<&str> = href.strip_prefix("http://")
             .or_else(|| href.strip_prefix("https://"))
             .unwrap_or("")

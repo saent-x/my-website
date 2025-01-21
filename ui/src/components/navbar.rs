@@ -1,19 +1,20 @@
 use dioxus::prelude::*;
-use web_sys::window;
-use crate::{site_router::SiteRoute, util};
+use crate::site_router::SiteRoute;
+use dioxus::logger::tracing::info;
 
 
 const LOGO_SVG: Asset = asset!("/assets/tor_logo.svg");
 
 #[component]
-pub fn Navbar() -> Element {    
-    let href = window()
-        .expect("[ERROR] an error ocurred retrieving window")
-        .location()
-        .href()
-        .expect("[ERROR] an error ocurred retrieving href");
+pub fn Navbar() -> Element {
+    let active_page = match router().current() {
+        SiteRoute::HomePage{} => "",
+        SiteRoute::BlogPage {} | SiteRoute::BlogPostPage { blog_post_id: _ } => "blog",
+        SiteRoute::AboutPage {} => "about",
+        SiteRoute::ContactPage {} => "contact",
+    };
     
-    let active_page: &str = util::get_page_from_url(&href);
+    info!("active page: {active_page}");
     
     rsx! {
         div {

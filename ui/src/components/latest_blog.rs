@@ -10,6 +10,7 @@ pub fn LatestBlog() -> Element {
     let res = use_resource(|| async move {
         get_latest_posts()
             .await
+            .expect("[ERROR] failed to retrieve blog posts")
     });
     
     let res_option = &*res.read_unchecked();

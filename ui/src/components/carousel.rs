@@ -15,7 +15,8 @@ pub fn Carousel(props: CarouselProps) -> Element {
     let mut current_slide = use_signal(|| 0);
     let slides_count = props.slides_count
         .unwrap_or_default();
-
+    
+    
     let prev = move |_event: Event<MouseData>| {                       
         match current_slide() == 0 {
             true => {

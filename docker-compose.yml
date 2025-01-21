@@ -3,17 +3,19 @@ services:
   ui:
     image: my-website-ui
     container_name: my-website-ui
-    pull_policy: never # stops from pulling from dockerhub/registry
+    pull_policy: never
     build:
       context: ./ui
       dockerfile: Dockerfile
       target: client
       args:
         - API_URL=$API_URL
-    environment:
-      - API_URL=$API_URL
     ports:
       - 80:80
+    networks:
+      - local-network
+    depends_on:
+      - server
   
   server:
     image: my-website-server
@@ -32,3 +34,10 @@ services:
       - UI_URL=$UI_URL
     ports:
       - 8000:8000
+    networks:
+      - local-network
+  
+networks:
+  local-network:
+      driver: bridge
+    
