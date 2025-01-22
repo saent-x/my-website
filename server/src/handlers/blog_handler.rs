@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::{ error::Error, models::querys::{BlogPostPaginationQuery, TotalPostQuery}, prelude::{ResponseStatusType, SAMPLE_MD}, util };
+use crate::{ error::Error, models::{blog::{CategorySchema, CreateBlogPost, CreateCategory}, querys::{BlogPostPaginationQuery, TotalPostQuery}}, prelude::{ResponseStatusType, SAMPLE_MD}, util };
 use axum::{ extract::{Query, State, Path}, response::IntoResponse, Json };
 use chrono::Local;
 use serde_json::{json, Value};
@@ -49,6 +49,36 @@ pub async fn get_latest_posts(State(db): State<Arc<Database>>) -> Result<Json<Va
     Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()),results)))
 }
 
+pub async fn get_categories(State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
+    let mut db_query = db.client.query("SELECT * FROM categories")
+        .await?;
+    
+    let results: Vec<CategorySchema> = db_query.take(0)?;
+    
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()),results)))
+}
+
+pub async fn get_category_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Result<Json<Value>, Error>{
+    let record: Option<CategorySchema> = db.client.select(("categories", id)).await?;
+    
+    match record {
+        Some(r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
+        None => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), "category not found")))
+    }
+}
+
+pub async fn create_category(State(db): State<Arc<Database>>, Json(payload): Json<CreateCategory>) -> Result<Json<Value>, Error> {
+    let bp_uuid = util::gen_uuid();
+    let category_schema = CategorySchema {
+        uuid: bp_uuid.clone(),
+        name: payload.name
+    };
+    
+    let record: Option<CategorySchema> = db.client.create(("categories", bp_uuid)).content(category_schema).await?;
+    
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), record)))
+}
+
 pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
     let mut page = query.page.unwrap_or_else(|| 1);
     page = if query.page.unwrap_or_else(|| 1) == 0 { 1 } else { page }; // prevents assigning page 0
@@ -73,37 +103,42 @@ pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(
 
     let results: Vec<BlogPostSchema> = db_query.take(0)?;
 
-    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()),results)))
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), results)))
 }
 
-pub async fn get_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Json<Value> {
-    let db_query: Result<Option<BlogPostSchema>, surrealdb::Error> = db.client.select(("blog_posts", &id)).await;
+pub async fn get_categories_from_ids(db: &Arc<Database>, uuids: &Vec<String>) -> Result<Vec<CategorySchema>, Error>{
+    let result: Vec<CategorySchema> = db.client.query(format!("SELECT * FROM categories WHERE uuid IN [{}]", uuids.join(", "))).await?.take(0)?;
+    
+    Ok(result)
+}
 
-    match db_query {
-        Ok(data) => Json(util::gen_response(ResponseStatusType::Success("200".to_string()),data)),
-        Err(err) => {
-            eprintln!("[ERROR] {err}"); //TODO: switch this to a logger eventually
+pub async fn get_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Result<Json<Value>, Error> {
+    let record: Option<BlogPostSchema> = db.client.select(("blog_posts", &id)).await?;
 
-            Json(util::gen_response(
-                ResponseStatusType::Error("400".to_string()),
-                "failed to find blog post",
-            ))
-        }
+    match record {
+        Some(mut r) => {
+            let categories: Vec<CategorySchema> = get_categories_from_ids(&db, &r.category.iter().map(|c| c.clone()).collect()).await?;
+            r.category = categories.iter().map(|c| c.name.clone()).collect();
+            
+            Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r)))
+        },
+        None => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), "blog post not found")))
     }
 }
 
 // TODO: create a separate page to handle blog post creation
-pub async fn create_blog_post(State(db): State<Arc<Database>>) -> Json<Value> {
+pub async fn create_blog_post(State(db): State<Arc<Database>>, Json(payload): Json<CreateBlogPost>) -> Json<Value> {
     let current_dt = Local::now().format("%d-%m-%y").to_string();
     let bp_uuid = util::gen_uuid();
+    
     let mut post = BlogPostSchema{
         uuid: bp_uuid.clone(),
-        author: "Vangerwua Johnpaul".to_string(),
-        title: "How to create web apps using dioxus in Rust 🦀".to_string(),
-        date: current_dt,
-        description: "A brief and concise introduction into creating webapps using the dioxus cross platform framework".to_string(),
-        category: vec!["programming".to_string()],
-        content: Some(SAMPLE_MD.to_string())
+        author: payload.author,
+        title: payload.title,
+        date: payload.date,
+        description: payload.description,
+        category: payload.category,
+        content: Some(payload.content)
     };
     post.convert_content_to_html();
     

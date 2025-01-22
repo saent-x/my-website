@@ -2,6 +2,8 @@ mod components;
 mod pages;
 mod site_router;
 mod prelude;
+mod api_calls;
+mod models;
 
 use dioxus::prelude::*;
 use prelude::{FAVICON, MAIN_CSS, TAILWIND_CSS};

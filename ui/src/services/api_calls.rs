@@ -5,7 +5,7 @@ use crate::{models::dtos::{ApiResponse, BlogPostDTO}, prelude::*};
 pub async fn get_posts_count() -> Result<ApiResponse<u32>, reqwest::Error> {
     let http_client = reqwest::Client::new();
     
-    http_client.get(format!("{}api/blog/count", API_URL))
+    http_client.get(format!("{API_URL}api/blog/count"))
         .send()
         .await?
         .json::<ApiResponse<u32>>()
@@ -15,7 +15,7 @@ pub async fn get_posts_count() -> Result<ApiResponse<u32>, reqwest::Error> {
 pub async fn get_posts(page: usize, page_size: usize) -> Result<ApiResponse<Vec<BlogPostDTO>>, reqwest::Error> {
     let http_client = reqwest::Client::new();
     
-    http_client.get(format!("{}api/blog", API_URL))
+    http_client.get(format!("{API_URL}api/blog"))
         .query(&[("page", page), ("page_size", page_size)])
         .send()
         .await?
@@ -27,7 +27,7 @@ pub async fn get_latest_posts() -> Result<ApiResponse<Vec<BlogPostDTO>>, reqwest
     let http_client = reqwest::Client::new();
     
     info!("API - {}", API_URL); //TODO: REMOVE THIS
-    http_client.get(format!("{}api/blog/latest_posts", API_URL))
+    http_client.get(format!("{API_URL}api/blog/latest_posts"))
         .send()
         .await?
         .json::<ApiResponse<Vec<BlogPostDTO>>>()
@@ -37,7 +37,7 @@ pub async fn get_latest_posts() -> Result<ApiResponse<Vec<BlogPostDTO>>, reqwest
 pub async fn get_blogpost(blog_post_id: String) -> Result<ApiResponse<BlogPostDTO>, reqwest::Error> {
     let http_client = reqwest::Client::new();
     
-    http_client.get(format!("{}api/blog/{}", API_URL, blog_post_id))
+    http_client.get(format!("{API_URL}api/blog/{blog_post_id}"))
         .send()
         .await?
         .json::<ApiResponse<BlogPostDTO>>()

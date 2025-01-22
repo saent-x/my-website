@@ -11,3 +11,4 @@ pub struct BlogPostPaginationQuery {
 pub struct TotalPostQuery {
     pub category: Option<String>
 }
+

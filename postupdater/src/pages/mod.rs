@@ -3,6 +3,17 @@ use dioxus::prelude::*;
 
 #[component]
 pub fn Home() -> Element {
+    let mut selected_categories: Signal<Vec<String>> = use_signal(|| vec![]);
+    
+    let on_select = move |ev: Event<FormData>| {
+        let selected_items: Vec<String> = ev.values()
+            .iter()
+            .map(|v| v.0.clone())
+            .collect();
+        
+        selected_categories.set(selected_items);
+    };
+    
     let onkeytab = |ev: Event<KeyboardData>| {
         match ev.key() == Key::Tab {
             true => ev.prevent_default(),
@@ -41,7 +52,7 @@ pub fn Home() -> Element {
                     div { 
                         class: "flex flex-col w-[48%]",
                         label { "Date" }
-                        input { class: "bg-gray-100 p-2 shadow rounded", name: "date" }
+                        input { class: "bg-gray-100 p-2 shadow rounded", placeholder: "dd-mm-yy", name: "date" }
                      }
         
                     div { 
@@ -55,6 +66,8 @@ pub fn Home() -> Element {
                     class: "flex flex-col w-[48%] mb-10",
                     label { class: "mb-2", "Category" }
                     select {
+                        multiple: true,
+                        onchange: on_select,
                         option { value: "Option 1", "Option 1" }
                         option { value: "Option 2", "Option 2" }
                         option { value: "Option 3", "Option 3" }
@@ -64,7 +77,7 @@ pub fn Home() -> Element {
                 div { 
                     class: "flex flex-col mb-5",
                     label { "Content" }
-                    textarea { class: "bg-gray-100 w-[100%] h-[500px] p-4 shadow rounded", onkeydown: onkeytab, name: "content" }
+                    textarea { class: "bg-gray-100 w-[100%] h-[500px] p-4 shadow rounded", placeholder: "add markdown", onkeydown: onkeytab, name: "content" }
                  }
     
                 

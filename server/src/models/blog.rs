@@ -2,6 +2,17 @@ use pulldown_cmark::{html, Options, Parser};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct CreateCategory {
+    pub name: String
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CategorySchema {
+    pub uuid: String,
+    pub name: String
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct BlogPostSchema {
     pub uuid: String,
     pub author: String,
@@ -22,17 +33,16 @@ pub struct GetBlogPost {
     pub content: String,
 }
 
-
-#[derive(Debug, Deserialize)]
-pub struct BlogPost {
-    pub uuid: String,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct CreateBlogPost {
     pub author: String,
-    pub date: String,
     pub title: String,
+    pub date: String,
     pub description: String,
     pub category: Vec<String>,
     pub content: String,
 }
+
 
 impl BlogPostSchema {
     pub fn new<'a>(uuid: &'a str, author: &'a str, date: &'a str, title: &'a str, description: &'a str, category: Vec<String>, content: String) -> Self {
