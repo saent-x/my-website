@@ -11,7 +11,7 @@ use std::{env, sync::Arc};
 use axum::{ http::{ header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}, HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Router};
 use db::Database;
 use dotenv::dotenv;
-use handlers::blog_handler::{create_blog_post, create_category, get_blog_post_by_id, get_blog_posts, get_categories, get_category_by_id, get_latest_posts, get_total_posts_count, health_check};
+use handlers::blog_handler::{create_blog_post, create_category, delete_category_by_id, get_blog_post_by_id, get_blog_posts, get_categories, get_category_by_id, get_latest_posts, get_total_posts_count, health_check};
 use tower_http::cors::CorsLayer;
 
 #[tokio::main]
@@ -20,9 +20,7 @@ async fn main() -> surrealdb::Result<()> {
 
     // initialize db
     let db = Database::init().await.expect("failed to connect to db");
-    
     let ui_url = env::var("UI_URL").expect("cannot find variable");
-    println!("UI_URL: {}", ui_url);
     
     let cors: CorsLayer = CorsLayer::new()
         .allow_origin(ui_url.parse::<HeaderValue>().unwrap())
@@ -48,7 +46,7 @@ async fn load_router(app_state: Arc<Database>, cors: CorsLayer) -> Router {
         .route("/api/blog/count", get(get_total_posts_count))
         .route("/api/blog/latest_posts", get(get_latest_posts))
         .route("/api/category", post(create_category).get(get_categories))
-        .route("/api/category/:id", get(get_category_by_id))
+        .route("/api/category/:id", get(get_category_by_id).delete(delete_category_by_id))
         .with_state(app_state)
         .layer(cors)
 }

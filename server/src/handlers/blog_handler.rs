@@ -67,6 +67,15 @@ pub async fn get_category_by_id(State(db): State<Arc<Database>>, Path(id): Path<
     }
 }
 
+pub async fn delete_category_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Result<Json<Value>, Error>{
+    let record: Option<CategorySchema> = db.client.delete(("categories", id)).await?;
+    
+    match record {
+        Some(r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
+        None => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), "category not found")))
+    }
+}
+
 pub async fn create_category(State(db): State<Arc<Database>>, Json(payload): Json<CreateCategory>) -> Result<Json<Value>, Error> {
     let bp_uuid = util::gen_uuid();
     let category_schema = CategorySchema {
@@ -101,7 +110,17 @@ pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(
         .bind(("cat", category))
         .await?;
 
-    let results: Vec<BlogPostSchema> = db_query.take(0)?;
+    let mut results: Vec<BlogPostSchema> = db_query.take(0)?;
+    
+    results.iter_mut().map(|r| async {
+        let categories: Result<Vec<CategorySchema>, Error> = get_categories_from_ids(&db, &r.category.iter().map(|c| c.clone()).collect()).await;
+        let new_cat = match categories {
+            Ok(c) => c.iter().map(|c| c.name.clone()).collect(),
+            Err(_) => vec![]
+        };
+        
+        r.category = new_cat;
+    });
 
     Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), results)))
 }

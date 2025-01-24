@@ -32,7 +32,7 @@ pub fn BlogPage() -> Element {
     };
     
     let (count_res, blog_posts_res) = res_result;
-    let blog_posts = &blog_posts_res.data;
+    let blog_posts = &blog_posts_res.data; //TODO: check status code is 200
 
     rsx! {
         div {

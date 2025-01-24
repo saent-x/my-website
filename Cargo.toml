@@ -2,7 +2,7 @@
 members = [
     "ui",
     "server"
-, "postupdater"]
+, "manager"]
 
 resolver = "2"
 
