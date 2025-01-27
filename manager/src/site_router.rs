@@ -1,7 +1,8 @@
 use dioxus::prelude::*;
 
-use crate::components::Layout;
-use crate::pages::{Home, UpdateCategory};
+use crate::components::layout::Layout;
+use crate::pages::{home::Home, update_category::UpdateCategory, add_post::AddBlogPost, posts::Posts};
+
 
 #[derive(Debug, Clone, Routable, PartialEq)]
 #[rustfmt::skip]
@@ -11,6 +12,12 @@ pub enum SiteRouter {
     #[route("/")]
     Home {},
     
-    #[route("/cat")]
-    UpdateCategory {}
+    #[route("/update_category")]
+    UpdateCategory {},
+    
+    #[route("/add_post")]
+    AddBlogPost {},
+    
+    #[route("/posts")]
+    Posts {},
 }

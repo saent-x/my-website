@@ -28,7 +28,6 @@ pub fn LatestBlog() -> Element {
          }
 
          div {
-            // lists out the featured projects in a horizontal scroll
             class: "flex flex-col overflow-auto w-full",
             
             for post in latest_posts {
@@ -37,9 +36,9 @@ pub fn LatestBlog() -> Element {
 
             Link {
                 to: SiteRoute::BlogPage {},
-                class: "w-fit mx-auto",
+                class: "w-fit mx-auto mt-5",
                 button {
-                    class: "p-1 rounded-md shadow text-xs text-white bg-gray-800",
+                    class: "btn btn-accent",
                     "View More"
                 }
             }
@@ -51,20 +50,39 @@ pub fn LatestBlog() -> Element {
 #[component]
 fn BlogContainer(uuid: String, title: String, description: String) -> Element {
     rsx!{
-        div {
-            class: "flex flex-row justify-between shadow border-2 border-gray-100 mb-5 p-4 px-8 min-w-full w-full rounded-md",
+        div { class: "card card-side bg-base-200 shadow-sm lg:h-48 mb-4",
+              div { class: "card-body",
+                  h2 { class: "card-title", "{title}" }
+                  p { "{description}" }
+                  div { class: "card-actions justify-start",
+                      Link {
+                          to: SiteRoute::BlogPostPage { blog_post_id: uuid },
+                          button { class: "btn btn-accent", "Read More" }
+                      }
+                  }
+              }
+              
+              figure {
+                  img {
+                      src: TMP_IMAGE,
+                      alt: "blog post",
+                  }
+              }
+          }
+        // div {
+        //     class: "flex flex-row justify-between shadow-sm ring mb-5 p-4 px-8 min-w-full w-full rounded-md",
 
-            div {
-                class: "rounded-b-md",
-                h2 { class: "mt-1 text-bold text-black text-sm", "{title}" } // project name
-                p { class: "mt-1 text-gray-500 text-sm", "{description}" }
+        //     div {
+        //         class: "rounded-b-md",
+        //         h2 { class: "mt-1 text-bold text-black text-sm", "{title}" } // project name
+        //         p { class: "mt-1 text-gray-500 text-sm", "{description}" }
 
-                Link {
-                    to: SiteRoute::BlogPostPage { blog_post_id: uuid },
-                    button { class: "bg-gray-800 text-white rounded mt-3 text-xs cursor-pointer p-1 shadow", "Read More" }
-                }
-            }
-            img{ class: "w-[30%] h-[150px] rounded-t-md", src: TMP_IMAGE }
-        }
+        //         Link {
+        //             to: SiteRoute::BlogPostPage { blog_post_id: uuid },
+        //             button { class: "bg-gray-800 text-white rounded-xs mt-3 text-xs cursor-pointer p-1 shadow-2xs", "Read More" }
+        //         }
+        //     }
+        //     img{ class: "w-[30%] h-[150px] rounded-t-md", src: TMP_IMAGE }
+        // }
     }
 }

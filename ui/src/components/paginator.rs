@@ -1,4 +1,4 @@
-use dioxus::{logger::tracing::info, prelude::*};
+use dioxus::prelude::*;
 
 
 #[component]
@@ -11,19 +11,23 @@ pub fn Paginator(posts_per_page: u32, total_posts: u32, paginate: EventHandler<u
             class: "flex flex-row justify-center w-full",
             div {
                 class: "mx-5",
-                for i in 1..=pag_btn_count {
-                    button {
-                        class: "p-2 px-3 ml-1 rounded-md shadow",
-                        class: if active_page() == i{ "bg-gray-200 text-black text-base"}else{ "bg-gray-800 text-white text-xs" },
-                        
-                        onclick: move |_| {
-                            info!("paginating...");
-                            active_page.set(i);
-                            paginate.call(i)
-                        },
-                        "{i}"
-                     }
+                
+                div { class: "join",
+                    for i in 1..=pag_btn_count {
+                        button {
+                            class: "join-item btn btn-md",
+                            class: if active_page() == i{ "btn-active"},
+                            
+                            onclick: move |_| {
+                                active_page.set(i);
+                                paginate.call(i)
+                            },
+                            "{i}"
+                         }
+                    }
                 }
+                
+                
              }
          }
     }

@@ -18,11 +18,10 @@ pub fn LatestProject() -> Element{
             class: "flex flex-row overflow-auto w-full",
 
             Carousel{
-                slides_count: 2,
-                children: rsx!{
-                    ProjectContainer { name: "St. Faus", description: "A minimalist Music Player for Study and Focus" }
-                    ProjectContainer { name: "St. Faus II", description: "A minimalist Music Player for Study and Focus" }
-                }
+                carousel_items: vec![
+                    rsx!{ProjectContainer { name: "St. Faus", description: "A minimalist Music Player for Study and Focus" }},
+                    rsx!{ProjectContainer { name: "St. Faus II", description: "A minimalist Music Player for Study and Focus" }}
+                ]
             }
         }
     }
@@ -35,17 +34,21 @@ const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 #[component]
 fn ProjectContainer(name: String, description: String) -> Element {
     rsx!{
-        div {
-            class: "flex flex-row justify-between shadow border-2 border-gray-100 p-4 px-8 min-w-full w-full rounded-md",
-                
-            div {
-                class: "rounded-b-md",
-                h2 { class: "mt-1 text-bold text-black text-sm", "{name}" } // project name
-                p { class: "mt-1 text-gray-500 text-sm", "{description}" }
-
-                button { onclick: move |_| info!("navigating to github..."), class: "bg-gray-800 text-white rounded mt-3 text-xs cursor-pointer p-1 shadow", "View Project" } // should link to github page
-            }
-            img{ class: "w-[25%] h-[100px] rounded-t-md", src: TMP_IMAGE }
-        }
+        div { class: "card card-side bg-base-200 shadow-sm lg:h-48 mb-2 min-w-full w-full",
+              div { class: "card-body",
+                  h2 { class: "card-title", "{name}" }
+                  p { "{description}" }
+                  div { class: "card-actions justify-start",
+                      button { class: "btn btn-accent", "View Project" }
+                  }
+              }
+              
+              figure {
+                  img {
+                      src: TMP_IMAGE,
+                      alt: "blog post",
+                  }
+              }
+         }
     }
 }

@@ -1,7 +1,5 @@
 use dioxus::prelude::*;
-use crate::prelude::*;
-
-const BRIEFCASE_IMG: Asset = asset!("/assets/briefcase.png");
+use crate::{prelude::*, util::get_current_theme};
 
 #[component]
 pub fn AboutPage() -> Element {
@@ -12,16 +10,16 @@ pub fn AboutPage() -> Element {
             div { 
                 class: "flex flex-col items-center",
     
-                img { class: "h-36 w-36 rounded-md border-2 shadow border-black mb-4", src: TOR_IMAGE}
-                h1 { class: "text-black text-lg", "Vangerwua Johnpaul Tor" }
-                h3 { class: "text-gray-400 text-md", "Full Stack Developer"}
+                img { class: "h-48 w-48 rounded-md border-2 shadow-2xs border-black mb-4", src: TOR_IMAGE}
+                h1 { class: "text-2xl", "Vangerwua Johnpaul Tor" }
+                h3 { class: "text-md", "Full Stack Developer"}
              }
     
             div { 
                 class: "mt-10",
-                h1 { class: "text-black text-lg", "About Me" },
+                h1 { class: "text-2xl mb-4", "About Me" },
                 h3 { 
-                    class: "text-gray-400 text-md", 
+                    class: "text-md", 
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                     Vivamus luctus urna sed urna ultricies ac tempor dui sagittis.
                     In condimentum facilisis porta. Sed nec diam eu diam mattis viverra.
@@ -31,7 +29,7 @@ pub fn AboutPage() -> Element {
     
             div { 
                 class: "mt-10",
-                h1 { class: "text-black text-lg", "Skills" },
+                h1 { class: "text-lg", "Skills" },
                 div { 
                     class: "flex flex-row mt-3",
     
@@ -47,7 +45,7 @@ pub fn AboutPage() -> Element {
     
             div { 
                 class: "mt-10",
-                h1 { class: "text-black text-lg", "Experience" },
+                h1 { class: "text-lg", "Experience" },
                 ExperienceItem {  }
                 ExperienceItem {  }
                 ExperienceItem {  }
@@ -60,23 +58,34 @@ pub fn AboutPage() -> Element {
 
 #[component]
 fn ExperienceItem() -> Element {
+    let theme = get_current_theme();
     rsx!{
         div { 
             class: "flex flex-row justify-between mb-5 mt-5",
             div { 
                 class: "flex flex-row items-center",
-                img { class: "h-5 w-5 mr-4", src: BRIEFCASE_IMG },
+                svg {
+                    "viewBox": "0 0 24 24",
+                    fill: "none",
+                    xmlns: "http://www.w3.org/2000/svg",
+                    "stroke-width": "1.5",
+                    stroke: "currentColor",
+                    class: "size-6 mr-4",
+                    path {
+                        d: "M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 0 0 .75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 0 0-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0 1 12 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 0 1-.673-.38m0 0A2.18 2.18 0 0 1 3 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 0 1 3.413-.387m7.5 0V5.25A2.25 2.25 0 0 0 13.5 3h-3a2.25 2.25 0 0 0-2.25 2.25v.894m7.5 0a48.667 48.667 0 0 0-7.5 0M12 12.75h.008v.008H12v-.008Z",
+                        "stroke-linejoin": "round",
+                        "stroke-linecap": "round",
+                    }
+                }
                 div { 
                     class: "flex flex-col",
-                    h1 { class: "text-black text-base", "Cyber Security Engineer | Tata Technologies" }
+                    h1 { class: "text-base", "Cyber Security Engineer | Tata Technologies" }
                     h3 { class: "text-gray-400 text-xs mt-2", "October 2022 - Present"}
                  }
              }, 
+             
+            button { class: "btn btn-accent cursor-pointer", "More Info" }
 
-            button { 
-                class: "p-1 h-8 cursor-pointer rounded-md shadow text-xs text-white bg-gray-800",
-                "more info"
-            }
          }
     }
 }
@@ -84,6 +93,6 @@ fn ExperienceItem() -> Element {
 #[component]
 fn Skill(name: String) -> Element {
     rsx!{
-        div { class: "m-1 px-2 py-1 bg-gray-800 text-white text-xs rounded-md", "{name}" }
+        div { class: "m-1 px-2 py-1 bg-accent text-black text-xs rounded-md", "{name}" }
     }
 }

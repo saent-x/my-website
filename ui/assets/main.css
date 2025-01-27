@@ -1,8 +1,8 @@
 /* App-wide styling */
 body {
-    background-color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 20px;
+    height: 100vh;
 }
 
 #hero {

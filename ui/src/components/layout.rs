@@ -1,5 +1,5 @@
-use dioxus::prelude::*;
-use crate::{components::footer::Footer, site_router::SiteRoute};
+use dioxus::{logger::tracing::info, prelude::*};
+use crate::{components::footer::Footer, site_router::SiteRoute, util::{get_current_theme, set_current_theme}};
 
 use super::navbar::Navbar;
 
@@ -8,11 +8,11 @@ pub fn Layout() -> Element {
     rsx!{
         div {
             id: "layout",
-            class: "flex flex-col items-center w-[100%] h-[100%]",
-            Navbar{}
+            class: "flex flex-col items-center w-[100%] h-full bg-base-100",
+            Navbar{ }
             
             Outlet::<SiteRoute> {}
-            Footer {}
+            Footer {} 
         }
     }
 }

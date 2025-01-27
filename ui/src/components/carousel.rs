@@ -1,67 +1,49 @@
-use dioxus::prelude::*;
-//use dioxus::logger::tracing::info;
+use dioxus::{logger::tracing::info, prelude::*};
 
 const PREV_IMG: Asset = asset!("/assets/previous.png");
 const NEXT_IMG: Asset = asset!("/assets/next.png");
 
 #[derive(PartialEq, Clone, Props)]
 pub struct CarouselProps {
-    slides_count: Option<usize>,
-    children: Element
+    carousel_items: Vec<Element>
 }
 
 #[component]
 pub fn Carousel(props: CarouselProps) -> Element {
-    let mut current_slide = use_signal(|| 0);
-    let slides_count = props.slides_count
-        .unwrap_or_default();
+    let slides_count = props.carousel_items.len();
+    let navi = navigator();
     
+    let nav_on_next_slide = move |ev: Event<MouseData>, current_slide: usize| {
+        ev.prevent_default();
+        let value = match current_slide == slides_count {
+            true => 1,
+            false => current_slide + 1
+        };
+        
+        navi.push(format!("#slide{}", value));
+    };
     
-    let prev = move |_event: Event<MouseData>| {                       
-        match current_slide() == 0 {
-            true => {
-                current_slide += slides_count - 1
-            },
-            false => {
-                current_slide -= 1
-            }
+    let nav_on_prev_slide = move |ev: Event<MouseData>, current_slide: usize| {
+        ev.prevent_default();        
+        let value = match current_slide == 1 {
+            true => slides_count,
+            false => current_slide.abs_diff(1)
         };
+        
+        navi.push(format!("#slide{}", value));
     };
-
-    let next = move |_event: Event<MouseData>| {
-        match current_slide() == slides_count - 1 {
-            true => {
-                current_slide.set(0);
-            },
-            false => {
-                current_slide += 1
-            }
-        };
-    };
-
+        
     rsx!{
-        div {
-            class: "overflow-hidden relative",
-
-            div {
-                class: "flex transition-transform ease-out duration-500",
-                style: format!("transform: translateX(-{}%)", current_slide() * 100),
-
-                {props.children}
-             }
-             img { class: "bg-gray-100 opacity-50 h-7 cursor-pointer absolute inset-0 my-auto", onclick: prev, src: PREV_IMG }
-             img { class: "bg-gray-100 opacity-50 h-7 cursor-pointer absolute inset-0 my-auto ml-auto", onclick: next, src: NEXT_IMG }
-
-             div {
-                class: "flex flex-row w-full justify-center mt-1",
-
-                for i in 0..slides_count{
-                    div { 
-                        class: "h-[5px] w-[5px] m-[2px] rounded-full bg-black transition-all",
-                        class: if current_slide() == i { "p-[3px]" } else { "bg-opacity-50" }
-                     }
+        div { class: "carousel w-full",
+            for (i, el) in props.carousel_items.iter().enumerate() {
+                div { class: "carousel-item relative w-full", id: "slide{i+1}",
+                    {el}
+                    div { class: "absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between",
+                        a { onclick: move |ev| nav_on_prev_slide(ev, i+1), class: "btn btn-circle", "❮" }
+                        a { onclick: move |ev| nav_on_next_slide(ev, i+1), class: "btn btn-circle", "❯" }
+                    }
                 }
-             }
+            }
         }
     }
 }
