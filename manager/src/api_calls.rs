@@ -13,6 +13,41 @@ pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>>{
         .unwrap_or_default()
 }
 
+pub async fn get_categories_count() -> ApiResponse<u32>{
+    let client = reqwest::Client::new();
+    
+    client.get(format!("{API_URL}api/category/count"))
+        .send()
+        .await
+        .unwrap()
+        .json::<ApiResponse<u32>>()
+        .await
+        .unwrap_or_default()
+}
+
+pub async fn get_posts_count() -> ApiResponse<u32>{
+    let client = reqwest::Client::new();
+    
+    client.get(format!("{API_URL}api/blog/count"))
+        .send()
+        .await
+        .unwrap()
+        .json::<ApiResponse<u32>>()
+        .await
+        .unwrap_or_default()
+}
+
+pub async fn get_posts(page: usize, page_size: usize) -> Result<ApiResponse<Vec<BlogPostDTO>>, reqwest::Error> {
+    let http_client = reqwest::Client::new();
+    
+    http_client.get(format!("{API_URL}api/blog"))
+        .query(&[("page", page), ("page_size", page_size)])
+        .send()
+        .await?
+        .json::<ApiResponse<Vec<BlogPostDTO>>>()
+        .await
+}
+
 pub async fn delete_category(id: &str) -> ApiResponse<CategoryDTO> {
     let client = reqwest::Client::new();
     

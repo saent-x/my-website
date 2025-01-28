@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use crate::{prelude::*, util::get_current_theme};
+use crate::prelude::*;
 
 #[component]
 pub fn AboutPage() -> Element {
@@ -58,7 +58,6 @@ pub fn AboutPage() -> Element {
 
 #[component]
 fn ExperienceItem() -> Element {
-    let theme = get_current_theme();
     rsx!{
         div { 
             class: "flex flex-row justify-between mb-5 mt-5",
@@ -93,6 +92,6 @@ fn ExperienceItem() -> Element {
 #[component]
 fn Skill(name: String) -> Element {
     rsx!{
-        div { class: "m-1 px-2 py-1 bg-accent text-black text-xs rounded-md", "{name}" }
+        div { class: "m-1 px-2 py-1 bg-accent text-xs rounded-md", "{name}" }
     }
 }

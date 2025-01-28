@@ -17,6 +17,19 @@ pub async fn health_check() -> impl IntoResponse {
     Json(hc_response)
 }
 
+pub async fn get_total_categories_count(State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
+    let mut db_query = db.client.query("SELECT count() FROM categories GROUP ALL")
+        .await?;
+    
+    let result:Option<u32> = db_query.take("count")?;
+    let total_count = match result {
+        Some(value) => value,
+        None => 0
+    };
+    
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), result)))
+}
+
 pub async fn get_total_posts_count(Query(query): Query<TotalPostQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
     let category = query.category;
     let (query, category) = match category {

@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 
-#[derive(Default, Debug, Clone, Serialize, Deserialize)]
+#[derive(Default, PartialEq, Debug, Clone, Serialize, Deserialize)]
 pub struct BlogPostDTO {
+    pub uuid: Option<String>,
     pub author: String,
     pub date: String,
     pub title: String,

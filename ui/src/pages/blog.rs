@@ -10,7 +10,6 @@ const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 #[component]
 pub fn BlogPage() -> Element {
     let mut current_page: Signal<usize> = use_signal(|| 1);
-    let mut loading_state: Signal<bool> = use_signal(|| false);
     let posts_per_page: usize = 4;
     
     // get all blog posts from api
@@ -52,20 +51,14 @@ pub fn BlogPage() -> Element {
              div {
                 class: "mt-8",
 
-                if !loading_state() {
-                    for blog_post in &blog_posts { // [index_of_first_post..index_of_last_post]
-                        BlogPostItem { uuid: &blog_post.uuid, title: &blog_post.title, description: &blog_post.description, categories: blog_post.category.clone() }
-                    }
+                for blog_post in &blog_posts { // [index_of_first_post..index_of_last_post]
+                    BlogPostItem { uuid: &blog_post.uuid, title: &blog_post.title, description: &blog_post.description, categories: blog_post.category.clone() }
                 }
 
                 Paginator{
                     posts_per_page: posts_per_page.try_into().unwrap(),
                     total_posts: count_res.data,
-                    paginate: move |page_number: u32| {
-                        loading_state.set(true);
-                        current_page.set(page_number.try_into().unwrap());
-                        loading_state.set(false)
-                    }
+                    paginate: move |page_number: u32| current_page.set(page_number.try_into().unwrap())
                 }
               }
         }

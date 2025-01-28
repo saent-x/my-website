@@ -66,6 +66,7 @@ fn BlogContainer(uuid: String, title: String, description: String) -> Element {
                   img {
                       src: TMP_IMAGE,
                       alt: "blog post",
+                      class: "lg:max-w-[10px]"
                   }
               }
           }

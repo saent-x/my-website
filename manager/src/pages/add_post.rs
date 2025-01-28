@@ -63,18 +63,23 @@ pub fn AddBlogPost() -> Element {
                 
                 div { 
                     class: "flex flex-col w-[48%]",
-                    label { class: "text-sm", "Author" }
-                    input { 
-                        class: "bg-gray-100 p-2 shadow-2xs rounded-xs", name: "author", 
-                        value: blog_post_form().author, oninput: move |ev| blog_post_form.with_mut(|f| f.author = ev.value()) }
+                    fieldset { class: "fieldset",
+                        legend { class: "fieldset-legend", "Author" }
+                        input { 
+                            r#type: "text", name: "author", class: "input w-[100%]",
+                            value: blog_post_form().author, oninput: move |ev| blog_post_form.with_mut(|f| f.author = ev.value()) 
+                        }
                     }
+                }
     
                 div { 
                     class: "flex flex-col w-[48%]",
-                    label { class: "text-sm", "Title" }
-                    input { 
-                        class: "bg-gray-100 p-2 shadow-2xs rounded-xs", name: "title",
-                        value: blog_post_form().title, oninput: move |ev| blog_post_form.with_mut(|f| f.title = ev.value())
+                    fieldset { class: "fieldset",
+                        legend { class: "fieldset-legend", "Title" }
+                        input { 
+                            r#type: "text", name: "title", class: "input w-[100%]",
+                            value: blog_post_form().title, oninput: move |ev| blog_post_form.with_mut(|f| f.title = ev.value())
+                        }
                     }
                  }
             }
@@ -84,19 +89,23 @@ pub fn AddBlogPost() -> Element {
                 
                 div { 
                     class: "flex flex-col w-[48%]",
-                    label { class: "text-sm", "Date" }
-                    input { 
-                        class: "bg-gray-100 p-2 shadow-2xs rounded-xs", placeholder: "dd-mm-yy", name: "date",
-                        value: blog_post_form().date, oninput: move |ev| blog_post_form.with_mut(|f| f.date = ev.value())
+                    fieldset { class: "fieldset",
+                        legend { class: "fieldset-legend", "Date" }
+                        input { 
+                            r#type: "text", name: "date", placeholder: "dd-mm-yy", class: "input w-[100%]",
+                            value: blog_post_form().date, oninput: move |ev| blog_post_form.with_mut(|f| f.date = ev.value())
+                        }
                     }
                  }
     
                 div { 
                     class: "flex flex-col w-[48%]",
-                    label { class: "text-sm", "Description" }
-                    input { 
-                        class: "bg-gray-100 p-2 shadow-2xs rounded-xs", name: "description",
-                        value: blog_post_form().description, oninput: move |ev| blog_post_form.with_mut(|f| f.description = ev.value())
+                    fieldset { class: "fieldset",
+                        legend { class: "fieldset-legend", "Description" }
+                        input { 
+                            r#type: "text", name: "description", class: "input w-[100%]",
+                            value: blog_post_form().description, oninput: move |ev| blog_post_form.with_mut(|f| f.description = ev.value())
+                        }
                     }
                  }
             }
@@ -126,7 +135,7 @@ pub fn AddBlogPost() -> Element {
                 class: "flex flex-col mb-5",
                 label { class: "text-sm", "Content" }
                 textarea { 
-                    class: "bg-gray-100 w-[100%] h-[500px] p-4 shadow-2xs rounded-xs", placeholder: "add markdown", 
+                    class: "textarea w-[100%] h-[400px] p-4 shadow-2xs rounded-xs", placeholder: "add markdown", 
                     onkeydown: onkeytab, name: "content",
                     value: blog_post_form().content, oninput: move |ev| blog_post_form.with_mut(|f| f.content = Some(ev.value()))
                 }
@@ -134,7 +143,7 @@ pub fn AddBlogPost() -> Element {
 
             
             button { 
-                class: "p-4 cursor-pointer rounded-md shadow-2xs text-xs text-white bg-gray-800",
+                class: "btn p-4 mb-10 cursor-pointer rounded-md shadow-2xs text-xs text-white bg-gray-800",
                 onclick: on_submit,
                 "submit"
             }

@@ -10,6 +10,7 @@ use crate::site_router::SiteRoute;
 use dioxus::logger::tracing::Level;
 use dioxus::prelude::*;
 use prelude::{FAVICON, MAIN_CSS, TAILWIND_CSS};
+use util::{get_current_theme, set_ui_theme};
 
 
 fn main() {
@@ -24,6 +25,8 @@ fn main() {
 
 #[component]
 fn App() -> Element {
+    set_ui_theme(get_current_theme().as_str());
+    
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: MAIN_CSS }

@@ -1,5 +1,5 @@
-use dioxus::{logger::tracing::info, prelude::*};
-use crate::{components::footer::Footer, site_router::SiteRoute, util::{get_current_theme, set_current_theme}};
+use dioxus::prelude::*;
+use crate::{components::footer::Footer, site_router::SiteRoute};
 
 use super::navbar::Navbar;
 

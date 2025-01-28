@@ -6,7 +6,7 @@ mod api_calls;
 mod models;
 
 use dioxus::prelude::*;
-use prelude::{FAVICON, MAIN_CSS, TAILWIND_CSS};
+use prelude::{get_current_theme, set_ui_theme, FAVICON, MAIN_CSS, TAILWIND_CSS};
 use site_router::SiteRouter;
 
 
