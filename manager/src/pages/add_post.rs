@@ -1,6 +1,6 @@
 use gloo_timers::callback::Timeout;
 use dioxus::{logger::tracing::info, prelude::*};
-use crate::api_calls:: get_categories;
+use crate::api_calls::{create_blogpost,  get_categories};
 use crate::models::BlogPostDTO;
 
 
@@ -38,6 +38,23 @@ pub fn AddBlogPost() -> Element {
         loading.set(true);
         
         info!("{blog_post_form:?}");
+        
+        let mut updated_post = blog_post_form().clone();
+        updated_post.category = selected_categories().clone();
+        let res = create_blogpost(&updated_post).await;
+        
+        match res.code != "200" {
+            true => {
+                // trigger error alert
+                loading.set(false)
+            },
+            false => {
+                // clear form & show success message
+                loading.set(false);
+                blog_post_form.set(BlogPostDTO::default());
+                selected_categories.set(vec![]);
+            }
+        };
         
         Timeout::new(1_000, move || loading.set(false))
             .forget();        

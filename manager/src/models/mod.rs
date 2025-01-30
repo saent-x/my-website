@@ -12,6 +12,16 @@ pub struct BlogPostDTO {
     pub content: Option<String>
 }
 
+#[derive(Default, PartialEq, Debug, Clone, Serialize, Deserialize)]
+pub struct UpdateBlogPostDTO {
+    pub author: Option<String>,
+    pub date: Option<String>,
+    pub title: Option<String>,
+    pub description: Option<String>,
+    pub category: Option<Vec<String>>,
+    pub content: Option<String>
+}
+
 #[derive(Clone, Default, Serialize ,Deserialize)]
 pub struct CategoryDTO {
     pub uuid: Option<String>,

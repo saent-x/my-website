@@ -33,7 +33,7 @@ pub struct GetBlogPost {
     pub content: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Default, Debug, Serialize, Deserialize)]
 pub struct CreateBlogPost {
     pub author: String,
     pub title: String,

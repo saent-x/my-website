@@ -1,6 +1,5 @@
 use dioxus:: prelude::*;
-use rand::Rng;
-use crate::{components::paginator::Paginator, models::dtos::{ApiResponse, BlogPostDTO}, services::api_calls::{get_posts, get_posts_count}, site_router::SiteRoute};
+use crate::{components::paginator::Paginator, services::api_calls::{get_posts, get_posts_count}, site_router::SiteRoute};
 
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
@@ -12,29 +11,30 @@ pub fn BlogPage() -> Element {
     let mut current_page: Signal<usize> = use_signal(|| 1);
     let posts_per_page: usize = 4;
     
-    // get all blog posts from api
-    let res = use_resource(move || async move {
+    let no_posts_res = use_resource(get_posts_count);
+    let posts_res = use_resource(move || async move {
         let page = current_page();
         
-        (get_posts_count()
-            .await
-            .expect("[ERROR] failed to retrieve count"),
         get_posts(page, posts_per_page)
             .await
-            .expect("[ERROR] failed to retrieve blog posts"))
+            .expect("[ERROR] failed to retrieve blog posts")
     });
-        
-    let res_option = &*res.read_unchecked();
-    let res_result = match res_option{
-        Some((count, data)) => (count, data),
-        None => (&ApiResponse::error(), &ApiResponse::error()) // ??
-    };
     
-    let (count_res, blog_posts_res) = res_result;
-    let blog_posts = &blog_posts_res.data; //TODO: check status code is 200
+    let no_posts = no_posts_res.suspend()?;
+    let posts = posts_res.suspend()?;
+        
+    if posts().code != "200" || no_posts().code != "200" {
+        return rsx!{
+            div { 
+                class: "w-[55%] m-auto",
+                h1 { class: "text-2xl", "An error occured retrieving posts..." }
+            }
+        };
+    }
 
     rsx! {
         div {
+            id: "blog-top",
             class: "w-[55%]",
             h1 { class: "text-5xl mb-5", "Blog" }
 
@@ -51,13 +51,13 @@ pub fn BlogPage() -> Element {
              div {
                 class: "mt-8",
 
-                for blog_post in &blog_posts { // [index_of_first_post..index_of_last_post]
+                for blog_post in &posts().data { // [index_of_first_post..index_of_last_post]
                     BlogPostItem { uuid: &blog_post.uuid, title: &blog_post.title, description: &blog_post.description, categories: blog_post.category.clone() }
                 }
 
                 Paginator{
                     posts_per_page: posts_per_page.try_into().unwrap(),
-                    total_posts: count_res.data,
+                    total_posts: no_posts().data,
                     paginate: move |page_number: u32| current_page.set(page_number.try_into().unwrap())
                 }
               }
@@ -93,7 +93,7 @@ fn BlogPostItem(uuid: String, title: String, description: String, categories: Ve
                   div { class: "card-actions justify-start",
                       Link {
                           to: SiteRoute::BlogPostPage { blog_post_id: uuid },
-                          button { class: "btn btn-accent", "Read More" }     
+                          button { class: "btn btn-sm btn-accent", "Read More" }     
                       }
                   }
               }

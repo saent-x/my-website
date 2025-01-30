@@ -12,7 +12,7 @@ pub struct BlogPostDTO {
     pub content: Option<String>
 }
 
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Default, Debug, Clone, Deserialize)]
 pub struct ApiResponse<T> {
     pub status: String,
     pub code: String,

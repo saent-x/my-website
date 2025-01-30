@@ -83,7 +83,7 @@ fn ExperienceItem() -> Element {
                  }
              }, 
              
-            button { class: "btn btn-accent cursor-pointer", "More Info" }
+            button { class: "btn btn-sm btn-accent cursor-pointer", "More Info" }
 
          }
     }
@@ -92,6 +92,6 @@ fn ExperienceItem() -> Element {
 #[component]
 fn Skill(name: String) -> Element {
     rsx!{
-        div { class: "m-1 px-2 py-1 bg-accent text-xs rounded-md", "{name}" }
+        span { class: "badge badge-accent text-xs ml-1", "{name}" }
     }
 }

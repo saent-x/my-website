@@ -35,7 +35,7 @@ pub fn UpdatePosts(uuid: String) -> Element {
     };
     
     let on_submit = move |ev: Event<MouseData>| async move {
-        // get form data and send to server
+        // get form data and diff the updated data and send to server
         ev.prevent_default();
         
         loading.set(true);

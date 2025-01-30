@@ -1,12 +1,8 @@
 @import 'tailwindcss';
 
 @plugin "daisyui" {
-    themes: retro --default, black --prefersdark;
+    themes: lofi --default, black --prefersdark;
 }
-
-@import './assets/tailwind.css' layer(utilities);
-
-@import './assets/tailwind.utilities.css';
     
 @config './tailwind.config.js';
 

@@ -1,25 +1,14 @@
 use dioxus::prelude::*;
 
-use crate::{models::dtos::ApiResponse, services::api_calls::get_latest_posts, site_router::SiteRoute};
+use crate::{services::api_calls::get_latest_posts, site_router::SiteRoute};
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 
 #[component]
 pub fn LatestBlog() -> Element {
     
-    let res = use_resource(|| async move {
-        get_latest_posts()
-            .await
-            .expect("[ERROR] failed to retrieve blog posts")
-    });
-    
-    let res_option = &*res.read_unchecked();
-    let res_result = match res_option {
-        Some(data) => data,
-        None => &ApiResponse::error()
-    };
-    
-    let latest_posts = &res_result.data;
+    let res = use_resource(get_latest_posts);
+    let latest_posts = res.suspend()?;
     
     rsx!{
         h1 {
@@ -30,7 +19,7 @@ pub fn LatestBlog() -> Element {
          div {
             class: "flex flex-col overflow-auto w-full",
             
-            for post in latest_posts {
+            for post in latest_posts().data {
                 BlogContainer { uuid: &post.uuid, title: &post.title, description: &post.description }
             }
 
@@ -57,7 +46,7 @@ fn BlogContainer(uuid: String, title: String, description: String) -> Element {
                   div { class: "card-actions justify-start",
                       Link {
                           to: SiteRoute::BlogPostPage { blog_post_id: uuid },
-                          button { class: "btn btn-accent", "Read More" }
+                          button { class: "btn btn-sm btn-accent", "Read More" }
                       }
                   }
               }
@@ -70,20 +59,5 @@ fn BlogContainer(uuid: String, title: String, description: String) -> Element {
                   }
               }
           }
-        // div {
-        //     class: "flex flex-row justify-between shadow-sm ring mb-5 p-4 px-8 min-w-full w-full rounded-md",
-
-        //     div {
-        //         class: "rounded-b-md",
-        //         h2 { class: "mt-1 text-bold text-black text-sm", "{title}" } // project name
-        //         p { class: "mt-1 text-gray-500 text-sm", "{description}" }
-
-        //         Link {
-        //             to: SiteRoute::BlogPostPage { blog_post_id: uuid },
-        //             button { class: "bg-gray-800 text-white rounded-xs mt-3 text-xs cursor-pointer p-1 shadow-2xs", "Read More" }
-        //         }
-        //     }
-        //     img{ class: "w-[30%] h-[150px] rounded-t-md", src: TMP_IMAGE }
-        // }
     }
 }

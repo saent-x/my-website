@@ -1,4 +1,4 @@
-use crate::{models::{ApiResponse, BlogPostDTO, CategoryDTO}, prelude::*};
+use crate::{models::{ApiResponse, BlogPostDTO, CategoryDTO, UpdateBlogPostDTO}, prelude::*};
 
 
 pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>>{
@@ -6,11 +6,9 @@ pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>>{
     
     client.get(format!("{API_URL}api/category"))
         .send()
-        .await
-        .unwrap()
+        .await.unwrap()
         .json::<ApiResponse<Vec<CategoryDTO>>>()
-        .await
-        .unwrap_or_default()
+        .await.unwrap_or_default()
 }
 
 pub async fn get_categories_count() -> ApiResponse<u32>{
@@ -18,11 +16,9 @@ pub async fn get_categories_count() -> ApiResponse<u32>{
     
     client.get(format!("{API_URL}api/category/count"))
         .send()
-        .await
-        .unwrap()
+        .await.unwrap()
         .json::<ApiResponse<u32>>()
-        .await
-        .unwrap_or_default()
+        .await.unwrap_or_default()
 }
 
 pub async fn get_posts_count() -> ApiResponse<u32>{
@@ -30,11 +26,9 @@ pub async fn get_posts_count() -> ApiResponse<u32>{
     
     client.get(format!("{API_URL}api/blog/count"))
         .send()
-        .await
-        .unwrap()
+        .await.unwrap()
         .json::<ApiResponse<u32>>()
-        .await
-        .unwrap_or_default()
+        .await.unwrap_or_default()
 }
 
 pub async fn get_posts(page: usize, page_size: usize) -> Result<ApiResponse<Vec<BlogPostDTO>>, reqwest::Error> {
@@ -53,11 +47,9 @@ pub async fn delete_category(id: &str) -> ApiResponse<CategoryDTO> {
     
     client.delete(format!("{API_URL}api/category/{id}"))
         .send()
-        .await
-        .unwrap()
+        .await.unwrap()
         .json::<ApiResponse<CategoryDTO>>()
-        .await
-        .unwrap_or_default()
+        .await.unwrap_or_default()
 }
 
 pub async fn add_category(new_category: &str) -> ApiResponse<CategoryDTO> {
@@ -66,11 +58,9 @@ pub async fn add_category(new_category: &str) -> ApiResponse<CategoryDTO> {
     client.post(format!("{API_URL}api/category"))
         .json(&CategoryDTO{uuid: None, name: String::from(new_category)})
         .send()
-        .await
-        .unwrap()
+        .await.unwrap()
         .json::<ApiResponse<CategoryDTO>>()
-        .await
-        .unwrap_or_default()
+        .await.unwrap_or_default()
 }
 
 pub async fn create_blogpost(new_post: &BlogPostDTO) -> ApiResponse<BlogPostDTO>{
@@ -79,9 +69,18 @@ pub async fn create_blogpost(new_post: &BlogPostDTO) -> ApiResponse<BlogPostDTO>
     client.post(format!("{API_URL}api/blog"))
         .json(new_post)
         .send()
-        .await
-        .unwrap()
+        .await.unwrap()
         .json::<ApiResponse<BlogPostDTO>>()
-        .await
-        .unwrap_or_default()
+        .await.unwrap_or_default()
+}
+
+pub async fn update_blogpost(uuid: String, updated_post: &UpdateBlogPostDTO) -> ApiResponse<BlogPostDTO>{
+    let client = reqwest::Client::new();
+    
+    client.put(format!("{API_URL}api/blog/{}", uuid))
+        .json(updated_post)
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<BlogPostDTO>>()
+        .await.unwrap_or_default()
 }

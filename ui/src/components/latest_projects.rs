@@ -1,10 +1,8 @@
 use dioxus::prelude::*;
-use dioxus::logger::tracing::info;
-
 use crate::components::carousel::Carousel;
 
 
-/// A sample dioxus component
+/// component that shows latest projects read from a toml file
 #[component]
 pub fn LatestProject() -> Element{
     rsx!{
@@ -39,7 +37,7 @@ fn ProjectContainer(name: String, description: String) -> Element {
                   h2 { class: "card-title", "{name}" }
                   p { "{description}" }
                   div { class: "card-actions justify-start",
-                      button { class: "btn btn-accent", "View Project" }
+                      button { class: "btn btn-sm btn-accent", "View Project" }
                   }
               }
               

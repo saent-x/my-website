@@ -139,7 +139,8 @@ pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(
 }
 
 pub async fn get_categories_from_ids(db: &Arc<Database>, uuids: &Vec<String>) -> Result<Vec<CategorySchema>, Error>{
-    let result: Vec<CategorySchema> = db.client.query(format!("SELECT * FROM categories WHERE uuid IN [{}]", uuids.join(", "))).await?.take(0)?;
+    let result: Vec<CategorySchema> = db.client.query(format!("SELECT * FROM categories WHERE uuid IN [{}]", uuids.join(", ")))
+        .await?.take(0)?;
     
     Ok(result)
 }
@@ -186,5 +187,22 @@ pub async fn create_blog_post(State(db): State<Arc<Database>>, Json(payload): Js
                 "failed to create blog post",
             ))
         }
+    }
+}
+
+pub async fn update_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>, Json(payload): Json<CreateBlogPost>) -> Result<Json<Value>, Error> {
+    let result: CreateBlogPost = db.client.update(("blog_posts", &id))
+        .content(payload).await?
+        .unwrap_or_default();
+    
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), result)))
+}
+
+pub async fn delete_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Result<Json<Value>, Error> {
+    let record: Option<BlogPostSchema> = db.client.delete(("blog_posts", &id)).await?;
+
+    match record {
+        Some(r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
+        None => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), "blog post not found")))
     }
 }
