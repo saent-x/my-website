@@ -1,14 +1,21 @@
 use gloo_timers::callback::Timeout;
 use dioxus::{logger::tracing::info, prelude::*};
 use crate::api_calls::{create_blogpost,  get_categories};
-use crate::models::BlogPostDTO;
+use crate::components::alert::{Alert, AlertType};
+use crate::models::{BlogPostDTO, CategoryDTO};
 
 
 #[component]
 pub fn AddBlogPost() -> Element {
-    let mut selected_categories: Signal<Vec<String>> = use_signal(||vec![]);
+    let mut selected_categories: Signal<Vec<CategoryDTO>> = use_signal(||vec![]);
     let mut blog_post_form: Signal<BlogPostDTO> = use_signal(|| BlogPostDTO::default());
     let mut loading: Signal<bool> = use_signal(|| false);
+    
+    let mut add_error: Signal<bool> = use_signal(|| false);
+    let mut err_message: Signal<String> = use_signal(String::new);
+    
+    let mut add_success: Signal<bool> = use_signal(|| false);
+    let mut success_message: Signal<String> = use_signal(String::new);
     
     let categories_res = use_resource(get_categories);
     let categories = categories_res.suspend()?;
@@ -21,38 +28,67 @@ pub fn AddBlogPost() -> Element {
             }
         };
     }
+    
+    let set_add_error = move |msg: String| async move {
+        add_error.set(true);
+        err_message.set(msg);
         
-    let on_select = move |ev: Event<FormData>| {
-        let item: Vec<FormValue> = ev.values()
-            .into_values().collect();
-        match item.get(0) {
-            Some(v) => selected_categories.set(v.as_slice().to_vec()),
-            None => {}
-        };
+        Timeout::new(2_000, move || add_error.set(false))
+            .forget(); 
+    };
+    
+    let set_add_success = move |msg: String| async move {
+        add_success.set(true);
+        success_message.set(msg);
+        
+        Timeout::new(2_000, move || add_success.set(false))
+            .forget(); 
+    };
+        
+    let mut on_select = move |_: Event<FormData>, category_dto: CategoryDTO| {
+        selected_categories.with_mut(|v| {
+            if v.contains(&category_dto) {
+                v.retain(|c| c.uuid.clone().unwrap_or_default() != category_dto.uuid.clone().unwrap_or_default());
+            } else {
+                v.push(category_dto);
+            }
+        });
+    };
+    
+    
+    let clear_selected_categories = move |_: Event<MouseData>| {
+        selected_categories.set(vec![]);
     };
     
     let on_submit = move |ev: Event<MouseData>| async move {
-        // get form data and send to server
         ev.prevent_default();
-        
         loading.set(true);
         
-        info!("{blog_post_form:?}");
-        
         let mut updated_post = blog_post_form().clone();
-        updated_post.category = selected_categories().clone();
+        updated_post.category = selected_categories();
+        
+        if updated_post.author.trim().is_empty() || 
+            updated_post.title.trim().is_empty() || 
+            updated_post.date.trim().is_empty() || 
+            updated_post.description.trim().is_empty() ||
+            updated_post.category.len() <= 0 ||
+            updated_post.content.clone().unwrap_or_default().trim().is_empty() {
+                set_add_error("fields should not be empty!".to_string()).await;
+                loading.set(false); 
+                return
+            }
+        
         let res = create_blogpost(&updated_post).await;
         
         match res.code != "200" {
-            true => {
-                // trigger error alert
-                loading.set(false)
-            },
+            true => loading.set(false),
             false => {
                 // clear form & show success message
                 loading.set(false);
                 blog_post_form.set(BlogPostDTO::default());
                 selected_categories.set(vec![]);
+                
+                set_add_success("new post added successfully".to_string()).await;
             }
         };
         
@@ -127,53 +163,67 @@ pub fn AddBlogPost() -> Element {
                  }
             }
             
-            div { 
-                class: "flex flex-row w-[100%] h-8",
-                for selected_category in selected_categories.read().iter() {
-                    SelectedCategories {category_name: selected_category}
-                }
-            }
             
-            div { 
-                class: "flex flex-col w-[48%] mt-2 mb-10",        
-                select {
-                    class: "bg-gray-100 shadow-2xs",
-                    multiple: true,
-                    oninput: on_select,
-                    
-                    option { class: "text-black", hidden: true, disabled: true, "select a category" }
-                    for category in categories().data {
-                        option { value: category.name.clone() , "▪ {category.name}" }
+            div{
+                class: "flex flex-col w-[100%] gap-2",
+                fieldset { class: "fieldset",
+                    legend { class: "fieldset-legend", "Description" }
+                
+                    div { 
+                        class: "flex flex-row w-[100%] gap-2 mb-4",
+                        form { style: "display:contents",
+                            for category in categories().data {
+                                input { r#type: "checkbox", class: "btn-sm", name: "categories", "aria-label": "{category.name}", oninput: move |ev| on_select(ev, category.clone()), class: "btn" }
+                            }
+                            button { r#type: "reset", class: "btn btn-sm btn-error", onclick: clear_selected_categories,
+                                svg {
+                                    "stroke-width": "1.5",
+                                    stroke: "currentColor",
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    fill: "none",
+                                    "viewBox": "0 0 24 24",
+                                    class: "size-4",
+                                    path {
+                                        "stroke-linecap": "round",
+                                        "stroke-linejoin": "round",
+                                        d: "M6 18 18 6M6 6l12 12",
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
             
             div { 
-                class: "flex flex-col mb-5",
-                label { class: "text-sm", "Content" }
-                textarea { 
-                    class: "textarea w-[100%] h-[400px] p-4 shadow-2xs rounded-xs", placeholder: "add markdown", 
-                    onkeydown: onkeytab, name: "content",
-                    value: blog_post_form().content, oninput: move |ev| blog_post_form.with_mut(|f| f.content = Some(ev.value()))
+                class: "flex flex-col",
+                fieldset { class: "fieldset",
+                    legend { class: "fieldset-legend", "Content" }
+                    textarea { 
+                        class: "textarea w-[100%] h-[400px] p-4 rounded-md", placeholder: "add markdown", 
+                        onkeydown: onkeytab, name: "content",
+                        value: blog_post_form().content, oninput: move |ev| blog_post_form.with_mut(|f| f.content = Some(ev.value()))
+                    }
                 }
              }
 
-            
-            button { 
-                class: "btn p-4 mb-10 cursor-pointer rounded-md shadow-2xs text-xs text-white bg-gray-800",
-                onclick: on_submit,
-                "submit"
+            div { 
+                class: "pt-2",
+                Alert{ alert_type: AlertType::Warning, show: add_error(), message: err_message() }
+                Alert{ alert_type: AlertType::Success, show: add_success(), message: success_message() }
+                 
+                button { 
+                    class: "btn p-4 mt-2 mb-10 cursor-pointer rounded-md shadow-2xs text-xs text-white bg-gray-800",
+                    onclick: on_submit,
+                    
+                    if loading(){
+                        span { class: "loading loading-spinner" }
+                        "submitting"
+                    }else{
+                        "submit"
+                    }
+                }
             }
-        }
-    }
-}
-
-#[component]
-pub fn SelectedCategories(category_name: String) -> Element {
-    rsx!{
-        div { 
-            class: "text-center min-w-[10%] m-0 mr-2 text-sm rounded-md bg-gray-900 text-white p-1",
-            "{category_name}"
         }
     }
 }

@@ -1,6 +1,6 @@
 use dioxus:: prelude::*;
 
-use crate::services::api_calls::get_blogpost;
+use crate::{services::api_calls::get_blogpost, util::render_md};
 
 #[component]
 pub fn BlogPostPage(blog_post_id: ReadOnlySignal<String>) -> Element {
@@ -10,21 +10,14 @@ pub fn BlogPostPage(blog_post_id: ReadOnlySignal<String>) -> Element {
     });
     
     let post = res.suspend()?;
+    let md = post().data.content.unwrap_or_else(|| "An error occured retrieving blog post...".to_string());
+    let render_md_to_html = render_md(&md); 
     
-    match &post().data.content {
-        Some(content) => rsx!(
-            div { 
-                id: "blog_post",
-                class: "no-tailwindcss p-10 lg:p-0 lg:w-[55%]",
-                dangerous_inner_html: content.clone()
-            }
-        ),
-        None => rsx!(
-            div { 
-                id: "blog_post",
-                class: "no-tailwindcss p-10 lg:p-0 lg:w-[55%]",
-                h1 { class: "text-2xl", "An error occured retrieving blog post..." }
-            }
-        )
-    }
+    rsx!(
+        div { 
+            id: "blog_post",
+            class: "no-tailwindcss p-10 lg:p-0 lg:w-[55%]",
+            dangerous_inner_html: render_md_to_html
+        }
+    )
 }

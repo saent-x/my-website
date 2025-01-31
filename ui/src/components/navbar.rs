@@ -1,5 +1,4 @@
 use dioxus::{logger::tracing::info, prelude::*};
-use dioxus_elements::track::default;
 use crate::{site_router::SiteRoute, util::{get_current_theme, set_ui_theme}};
 
 
@@ -10,7 +9,8 @@ pub fn Navbar() -> Element {
     rsx! {
         div { class: "navbar bg-base-100 shadow-md sticky mb-5",
                 div { class: "flex-1",
-                    a { 
+                    Link { 
+                        to: SiteRoute::HomePage {},
                         class: "btn btn-ghost text-xl", "tor.dev"
                     }
                 }

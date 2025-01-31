@@ -18,7 +18,7 @@ pub enum SiteRouter {
     #[route("/add_post")]
     AddBlogPost {},
     
-    #[route("/update_post")]
+    #[route("/update_post/:uuid")]
     UpdatePosts {uuid: String},
     
     #[route("/posts")]

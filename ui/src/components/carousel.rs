@@ -38,9 +38,9 @@ pub fn Carousel(props: CarouselProps) -> Element {
             for (i, el) in props.carousel_items.iter().enumerate() {
                 div { class: "carousel-item relative w-full", id: "slide{i+1}",
                     {el}
-                    div { class: "absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between",
-                        a { onclick: move |ev| nav_on_prev_slide(ev, i+1), class: "btn btn-circle", "❮" }
-                        a { onclick: move |ev| nav_on_next_slide(ev, i+1), class: "btn btn-circle", "❯" }
+                    div { class: "absolute left-2 right-2 top-1/2 flex -translate-y-1/2 transform justify-between",
+                        a { onclick: move |ev| nav_on_prev_slide(ev, i+1), class: "btn size-6 btn-circle btn-accent", "❮" }
+                        a { onclick: move |ev| nav_on_next_slide(ev, i+1), class: "btn size-6 btn-circle btn-accent", "❯" }
                     }
                 }
             }

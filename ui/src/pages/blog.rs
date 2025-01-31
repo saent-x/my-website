@@ -1,9 +1,8 @@
 use dioxus:: prelude::*;
-use crate::{components::paginator::Paginator, services::api_calls::{get_posts, get_posts_count}, site_router::SiteRoute};
+use crate::{components::paginator::Paginator, models::dtos::CategoryDTO, services::api_calls::{get_categories, get_posts, get_posts_count}, site_router::SiteRoute};
 
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
-
 
 /// Blog page
 #[component]
@@ -19,7 +18,9 @@ pub fn BlogPage() -> Element {
             .await
             .expect("[ERROR] failed to retrieve blog posts")
     });
+    let categories_res = use_resource(get_categories);
     
+    let categories = categories_res.suspend()?;
     let no_posts = no_posts_res.suspend()?;
     let posts = posts_res.suspend()?;
         
@@ -38,15 +39,29 @@ pub fn BlogPage() -> Element {
             class: "w-[55%]",
             h1 { class: "text-5xl mb-5", "Blog" }
 
-            // TODO: categories -> should be loaded from db
-            div {
-                class: "flex flex-row mt-4",
-                
-                Category { name: "Tech" } // should be clickable
-                Category { name: "Programming" }
-                Category { name: "Science" }
-                Category { name: "General" }
-             }
+            div { 
+                class: "flex flex-row w-[100%] gap-2 mb-4",
+                form { style: "display:contents",
+                    for category in categories().data {
+                        input { r#type: "checkbox", class: "btn-sm", name: "categories", "aria-label": "{category.name}", class: "btn" }
+                    }
+                    button { r#type: "reset", class: "btn btn-sm btn-error",
+                        svg {
+                            "stroke-width": "1.5",
+                            stroke: "currentColor",
+                            xmlns: "http://www.w3.org/2000/svg",
+                            fill: "none",
+                            "viewBox": "0 0 24 24",
+                            class: "size-4",
+                            path {
+                                "stroke-linecap": "round",
+                                "stroke-linejoin": "round",
+                                d: "M6 18 18 6M6 6l12 12",
+                            }
+                        }
+                    }
+                }
+            }
 
              div {
                 class: "mt-8",
@@ -78,14 +93,14 @@ fn Category(name: String) -> Element {
 
 /// BlogPost holds the individual blog post information
 #[component]
-fn BlogPostItem(uuid: String, title: String, description: String, categories: Vec<String>) -> Element {
+fn BlogPostItem(uuid: String, title: String, description: String, categories: Vec<CategoryDTO>) -> Element {
     rsx!{
-        div { class: "card card-side bg-base-200 shadow-sm lg:h-54 mb-4 min-w-full w-full",
+        div { class: "card card-side bg-base-200 shadow-sm lg:h-50 mb-4 min-w-full w-full",
               div { class: "card-body",
                   div { 
                         class: "flex flex-row",
                         for category in categories{
-                            h3 { class: "text-gray-500 text-sm mr-2", "#{category}" } 
+                            h3 { class: "text-gray-500 text-sm mr-2", "#{category.name}" } 
                         }
                     }
                   h2 { class: "card-title", "{title}" }

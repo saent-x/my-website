@@ -1,5 +1,10 @@
 use serde::Deserialize;
 
+#[derive(Clone, Debug, PartialEq, Default, Deserialize)]
+pub struct CategoryDTO {
+    pub uuid: Option<String>,
+    pub name: String
+}
 
 #[derive(Default, Debug, Clone, Deserialize)]
 pub struct BlogPostDTO {
@@ -8,7 +13,7 @@ pub struct BlogPostDTO {
     pub date: String,
     pub title: String,
     pub description: String,
-    pub category: Vec<String>,
+    pub category: Vec<CategoryDTO>,
     pub content: Option<String>
 }
 

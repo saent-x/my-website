@@ -14,6 +14,13 @@ pub fn get_page_from_url(href: &str) -> &str{
     }
 }
 
+pub fn render_md(md: &str) -> String {
+    let parser = pulldown_cmark::Parser::new(md);
+    let mut html_output = String::new();
+    pulldown_cmark::html::push_html(&mut html_output, parser);
+    html_output
+}
+
 pub fn get_current_theme() -> String {
     window()
         .and_then(|win| win.local_storage().ok())

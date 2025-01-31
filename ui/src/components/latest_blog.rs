@@ -1,4 +1,4 @@
-use dioxus::prelude::*;
+use dioxus::{logger::tracing::info, prelude::*};
 
 use crate::{services::api_calls::get_latest_posts, site_router::SiteRoute};
 
@@ -9,6 +9,8 @@ pub fn LatestBlog() -> Element {
     
     let res = use_resource(get_latest_posts);
     let latest_posts = res.suspend()?;
+    
+    info!("p: {:?}", latest_posts());
     
     rsx!{
         h1 {
@@ -27,7 +29,7 @@ pub fn LatestBlog() -> Element {
                 to: SiteRoute::BlogPage {},
                 class: "w-fit mx-auto mt-5",
                 button {
-                    class: "btn btn-accent",
+                    class: "btn btn-sm btn-accent",
                     "View More"
                 }
             }

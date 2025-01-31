@@ -11,7 +11,7 @@ use std::{env, sync::Arc};
 use axum::{ http::{ header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE}, HeaderValue, Method}, response::{Html, IntoResponse}, routing::{get, post}, Router};
 use db::Database;
 use dotenv::dotenv;
-use handlers::blog_handler::{create_blog_post, create_category, delete_category_by_id, get_blog_post_by_id, get_blog_posts, get_categories, get_category_by_id, get_latest_posts, get_total_categories_count, get_total_posts_count, health_check};
+use handlers::blog_handler::{create_blog_post, create_category, delete_blog_post_by_id, delete_category_by_id, get_blog_post_by_id, get_blog_posts, get_categories, get_category_by_id, get_latest_posts, get_total_categories_count, get_total_posts_count, health_check, update_blog_post_by_id};
 use tower_http::cors::CorsLayer;
 
 #[tokio::main]
@@ -42,7 +42,7 @@ async fn load_router(app_state: Arc<Database>, cors: CorsLayer) -> Router {
     Router::new()
         .route("/api/health", get(health_check))
         .route("/api/blog", post(create_blog_post).get(get_blog_posts))
-        .route("/api/blog/:id", get(get_blog_post_by_id))
+        .route("/api/blog/:id", get(get_blog_post_by_id).delete(delete_blog_post_by_id).post(update_blog_post_by_id))
         .route("/api/blog/count", get(get_total_posts_count))
         .route("/api/blog/latest_posts", get(get_latest_posts))
         .route("/api/category", post(create_category).get(get_categories))

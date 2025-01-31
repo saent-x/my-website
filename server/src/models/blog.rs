@@ -12,14 +12,14 @@ pub struct CategorySchema {
     pub name: String
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct BlogPostSchema {
-    pub uuid: String,
+    pub uuid: Option<String>,
     pub author: String,
     pub title: String,
     pub date: String,
     pub description: String,
-    pub category: Vec<String>,
+    pub category: Vec<CategorySchema>,
     pub content: Option<String>,
 }
 
@@ -33,30 +33,8 @@ pub struct GetBlogPost {
     pub content: String,
 }
 
-#[derive(Default, Debug, Serialize, Deserialize)]
-pub struct CreateBlogPost {
-    pub author: String,
-    pub title: String,
-    pub date: String,
-    pub description: String,
-    pub category: Vec<String>,
-    pub content: String,
-}
-
 
 impl BlogPostSchema {
-    pub fn new<'a>(uuid: &'a str, author: &'a str, date: &'a str, title: &'a str, description: &'a str, category: Vec<String>, content: String) -> Self {
-        Self {
-            uuid: uuid.to_string(),
-            author: author.to_string(),
-            date: date.to_string(),
-            title: title.to_string(),
-            description: description.to_string(),
-            category,
-            content: Some(content),
-        }
-    }
-
     pub fn convert_content_to_html(&mut self) {
         let mut parser_options = Options::empty();
         parser_options.insert(Options::ENABLE_STRIKETHROUGH);

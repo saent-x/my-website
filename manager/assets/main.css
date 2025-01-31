@@ -14,3 +14,7 @@ html, body {
 table {
     white-space: nowrap !important;
 }
+
+.no-tailwindcss * {
+    all: revert
+}

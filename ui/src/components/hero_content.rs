@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
-use crate::prelude::*;
+use crate::{prelude::*, site_router::SiteRoute};
 
-/// HeroContent component for the Hero component
+
 #[component]
 pub fn HeroContent() -> Element{
     rsx!{
@@ -19,7 +19,10 @@ pub fn HeroContent() -> Element{
                            journey as a Software Engineer. Dive in to explore my projects, tips, and the latest 
                            trends in tech. Enjoy your visit, find inspiration, and stay connected! 🌟"
                        }
-                       button { class: "btn btn-accent", "Read Posts" }
+                       Link {
+                           to: SiteRoute::BlogPage {  },
+                           button { class: "btn btn-accent btn-sm", "Read Posts" }
+                       }
                    }
                }
            }

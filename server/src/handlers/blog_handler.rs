@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::{ error::Error, models::{blog::{CategorySchema, CreateBlogPost, CreateCategory}, querys::{BlogPostPaginationQuery, TotalPostQuery}}, prelude::{ResponseStatusType, SAMPLE_MD}, util };
+use crate::{ error::Error, models::{blog::{CategorySchema, CreateCategory}, querys::{BlogPostPaginationQuery, TotalPostQuery}}, prelude::ResponseStatusType, util};
 use axum::{ extract::{Query, State, Path}, response::IntoResponse, Json };
 use chrono::Local;
 use serde_json::{json, Value};
@@ -103,7 +103,7 @@ pub async fn create_category(State(db): State<Arc<Database>>, Json(payload): Jso
 
 pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, Error> {
     let mut page = query.page.unwrap_or_else(|| 1);
-    page = if query.page.unwrap_or_else(|| 1) == 0 { 1 } else { page }; // prevents assigning page 0
+    page = if query.page.unwrap_or_else(|| 1) == 0 { 1 } else { page };
 
     let category = query.category;
     let page_size = query.page_size.unwrap_or_else(|| 5);
@@ -125,20 +125,22 @@ pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(
 
     let mut results: Vec<BlogPostSchema> = db_query.take(0)?;
     
-    results.iter_mut().map(|r| async {
-        let categories: Result<Vec<CategorySchema>, Error> = get_categories_from_ids(&db, &r.category.iter().map(|c| c.clone()).collect()).await;
-        let new_cat = match categories {
-            Ok(c) => c.iter().map(|c| c.name.clone()).collect(),
-            Err(_) => vec![]
-        };
+    // for blog_post in results.iter_mut() {
+    //     let categories: Result<Vec<CategorySchema>, Error> = get_categories_from_ids(&db, &blog_post.category.iter().map(|c| c.clone()).collect()).await;
         
-        r.category = new_cat;
-    });
+    //     let new_cat = match categories {
+    //         Ok(c) => c,
+    //         Err(_) => vec![]
+    //     };
+        
+    //     blog_post.category = new_cat;
+    // }
 
     Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), results)))
 }
 
 pub async fn get_categories_from_ids(db: &Arc<Database>, uuids: &Vec<String>) -> Result<Vec<CategorySchema>, Error>{
+    let uuids: Vec<String> = uuids.iter().map(|uuid| format!("'{}'", uuid)).collect();
     let result: Vec<CategorySchema> = db.client.query(format!("SELECT * FROM categories WHERE uuid IN [{}]", uuids.join(", ")))
         .await?.take(0)?;
     
@@ -150,8 +152,10 @@ pub async fn get_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path
 
     match record {
         Some(mut r) => {
-            let categories: Vec<CategorySchema> = get_categories_from_ids(&db, &r.category.iter().map(|c| c.clone()).collect()).await?;
-            r.category = categories.iter().map(|c| c.name.clone()).collect();
+            // let categories: Vec<CategorySchema> = get_categories_from_ids(&db, &r.category.iter().map(|c| c.clone()).collect()).await?;
+            // println!("ids: {:?}", categories);
+            
+            // r.category = categories.iter().map(|c| c.name.clone()).collect();
             
             Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r)))
         },
@@ -160,20 +164,19 @@ pub async fn get_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path
 }
 
 // TODO: create a separate page to handle blog post creation
-pub async fn create_blog_post(State(db): State<Arc<Database>>, Json(payload): Json<CreateBlogPost>) -> Json<Value> {
+pub async fn create_blog_post(State(db): State<Arc<Database>>, Json(payload): Json<BlogPostSchema>) -> Json<Value> {
     let current_dt = Local::now().format("%d-%m-%y").to_string();
     let bp_uuid = util::gen_uuid();
     
     let mut post = BlogPostSchema{
-        uuid: bp_uuid.clone(),
+        uuid: Some(bp_uuid.clone()),
         author: payload.author,
         title: payload.title,
         date: payload.date,
         description: payload.description,
         category: payload.category,
-        content: Some(payload.content)
+        content: payload.content
     };
-    post.convert_content_to_html();
     
     let record: Result<Option<BlogPostSchema>, surrealdb::Error> = db.client.create(("blog_posts", &bp_uuid)).content(post).await;
 
@@ -190,8 +193,8 @@ pub async fn create_blog_post(State(db): State<Arc<Database>>, Json(payload): Js
     }
 }
 
-pub async fn update_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>, Json(payload): Json<CreateBlogPost>) -> Result<Json<Value>, Error> {
-    let result: CreateBlogPost = db.client.update(("blog_posts", &id))
+pub async fn update_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>, Json(payload): Json<BlogPostSchema>) -> Result<Json<Value>, Error> {
+    let result: BlogPostSchema = db.client.update(("blog_posts", &id))
         .content(payload).await?
         .unwrap_or_default();
     
