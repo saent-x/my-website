@@ -12,7 +12,7 @@ pub async fn get_posts_count() -> ApiResponse<u32> {
         .await.unwrap_or_default()
 }
 
-pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>>{
+pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>> {
     let client = reqwest::Client::new();
     
     client.get(format!("{API_URL}api/category"))

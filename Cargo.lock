@@ -5642,7 +5642,7 @@ dependencies = [
  "axum",
  "chrono",
  "dotenv",
- "pulldown-cmark",
+ "regex",
  "serde",
  "serde_json",
  "surrealdb",
