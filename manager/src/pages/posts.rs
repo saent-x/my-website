@@ -53,7 +53,7 @@ pub fn Posts() -> Element {
             .await;
         
         if delete_category_res.code != "200" {
-            set_delete_error("an error occurred deleting category".to_string()).await;
+            set_delete_error("an error occurred deleting post".to_string()).await;
             return;
         }
         
@@ -98,7 +98,7 @@ fn Table(posts: Vec<BlogPostDTO>, on_delete_post: EventHandler<String>) -> Eleme
         div { 
             class: "mt-8 overflow-auto w-[100%]",
             div { class: "rounded-box overflow-x-auto border border-base-content/5 bg-base-100",
-                table { class: "block table w-full border-collapse",
+                table { class: "block table w-full border-collapse table-zebra",
                     thead {
                         tr {
                             th {}
@@ -123,7 +123,7 @@ fn Table(posts: Vec<BlogPostDTO>, on_delete_post: EventHandler<String>) -> Eleme
                                 td { class: "truncate max-w-[300px]", "{post.description}" }
                                 td { 
                                     for category in &post.category {
-                                        span { class: "badge badge-primary text-xs ml-1", "{category.name}" }
+                                        span { class: "badge badge-soft text-xs ml-1", "{category.name}" }
                                     }
                                 }
                                 td { "{post.date}" }

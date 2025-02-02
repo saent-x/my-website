@@ -12,3 +12,10 @@ pub struct TotalPostQuery {
     pub category: Option<String>
 }
 
+#[derive(Debug, Deserialize, Serialize)]
+pub struct MessageQuery {
+    pub read: Option<bool>,
+    pub page: Option<u32>,
+    pub page_size: Option<u32>,
+}
+

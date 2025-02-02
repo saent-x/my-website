@@ -12,6 +12,7 @@ dioxus = { version = "0.6.1", features = ["router"] }
 dotenvy = "0.15.7"
 dotenvy_macro = "=0.15.7"
 getrandom = { version = "0.2", features = ["js"] }
+gloo-timers = "0.3.0"
 pulldown-cmark = "0.12.2"
 rand = "0.8.5"
 reqwest = { version = "0.12.11", features = ["json"] }

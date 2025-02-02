@@ -1,16 +1,17 @@
 use std::sync::Arc;
 
 use crate::{ error::ApiError, models::{ querys::{BlogPostPaginationQuery, TotalPostQuery}}, prelude::ResponseStatusType, util};
-use axum::{ extract::{rejection::JsonRejection, Path, Query, State}, response::IntoResponse, Json };
+use axum::{ extract::{rejection::{JsonRejection, PathRejection, QueryRejection}, Path, Query, State}, response::IntoResponse, Json };
 use chrono::Local;
+use regex::Regex;
 use serde_json::{json, Value};
 
 use crate::{db::Database, models::blog_schema::BlogPostSchema};
 
 
-pub async fn get_total_posts_count(Query(query): Query<TotalPostQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, ApiError> {
-    let category = query.category;
-    let (query, category) = match category {
+pub async fn get_total_posts_count(query: Result<Query<TotalPostQuery>, QueryRejection>, State(db): State<Arc<Database>>) -> Result<Json<Value>, ApiError> {
+    let query = query.map_err(|e| ApiError::InvalidRequest(e.to_string()))?;
+    let (query, category) = match query.category.clone() {
         Some(cat) => {
             let cat = cat.split(",").map(|s| s.to_string()).collect();
             (format!("SELECT count() FROM blog_posts WHERE category CONTAINSANY $cat GROUP ALL"), cat)
@@ -18,11 +19,10 @@ pub async fn get_total_posts_count(Query(query): Query<TotalPostQuery>, State(db
         None => (format!("SELECT count() FROM blog_posts GROUP ALL"), Vec::new())
     };
     
-    let mut db_query = db.client.query(query)
+    let result: Option<u32> = db.client.query(query)
         .bind(("category", category))
-        .await?;
+        .await?.take("count")?;
     
-    let result:Option<u32> = db_query.take("count")?;
     let total_count = match result {
         Some(value) => value,
         None => 0
@@ -40,11 +40,12 @@ pub async fn get_latest_posts(State(db): State<Arc<Database>>) -> Result<Json<Va
     Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()),results)))
 }
 
-pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(db): State<Arc<Database>>) -> Result<Json<Value>, ApiError> {
+pub async fn get_blog_posts(query: Result<Query<BlogPostPaginationQuery>, QueryRejection>, State(db): State<Arc<Database>>) -> Result<Json<Value>, ApiError> {
+    let query = query.map_err(|e| ApiError::InvalidRequest(e.to_string()))?;
     let mut page = query.page.unwrap_or_else(|| 1);
     page = if query.page.unwrap_or_else(|| 1) == 0 { 1 } else { page };
 
-    let category = query.category;
+    let category = query.category.clone();
     let page_size = query.page_size.unwrap_or_else(|| 5);
     let start = (page - 1) * page_size;
     
@@ -67,8 +68,9 @@ pub async fn get_blog_posts(Query(query): Query<BlogPostPaginationQuery>, State(
     Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), results)))
 }
 
-pub async fn get_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Result<Json<Value>, ApiError> {
-    let record: Option<BlogPostSchema> = db.client.select(("blog_posts", &id)).await?;
+pub async fn get_blog_post_by_id(State(db): State<Arc<Database>>, id: Result<Path<String>, PathRejection>) -> Result<Json<Value>, ApiError> {
+    let path = id.map_err(|e| ApiError::InvalidRequest(e.to_string()))?;
+    let record: Option<BlogPostSchema> = db.client.select(("blog_posts", path.0)).await?;
 
     match record {
         Some(mut r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
@@ -93,25 +95,21 @@ pub async fn create_blog_post(State(db): State<Arc<Database>>, payload: Result<J
     
     let record: Option<BlogPostSchema> = db.client.create(("blog_posts", bp_uuid)).content(post).await?;
 
-    match record {
-        Some(r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
-        None => Ok(Json(util::gen_response(ResponseStatusType::Error("400".to_string()), "unable to create post")))
-    }
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), record)))
 }
 
-pub async fn update_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>, Json(payload): Json<BlogPostSchema>) -> Result<Json<Value>, ApiError> {
-    let result: BlogPostSchema = db.client.update(("blog_posts", &id))
-        .content(payload).await?
-        .unwrap_or_default();
+pub async fn update_blog_post_by_id(State(db): State<Arc<Database>>, id: Result<Path<String>, PathRejection>, Json(payload): Json<BlogPostSchema>) -> Result<Json<Value>, ApiError> {
+    let path = id.map_err(|e| ApiError::InvalidRequest(e.to_string()))?;
+    
+    let result: Option<BlogPostSchema> = db.client.update(("blog_posts", path.0))
+        .content(payload).await?;
     
     Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), result)))
 }
 
-pub async fn delete_blog_post_by_id(State(db): State<Arc<Database>>, Path(id): Path<String>) -> Result<Json<Value>, ApiError> {
-    let record: Option<BlogPostSchema> = db.client.delete(("blog_posts", &id)).await?;
+pub async fn delete_blog_post_by_id(State(db): State<Arc<Database>>, id: Result<Path<String>, PathRejection>) -> Result<Json<Value>, ApiError> {
+    let path = id.map_err(|e| ApiError::InvalidRequest(e.to_string()))?;
+    let record: Option<BlogPostSchema> = db.client.delete(("blog_posts", path.0)).await?;
 
-    match record {
-        Some(r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
-        None => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), "blog post not found")))
-    }
+    Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), record)))
 }

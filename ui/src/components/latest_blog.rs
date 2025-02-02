@@ -9,9 +9,7 @@ pub fn LatestBlog() -> Element {
     
     let res = use_resource(get_latest_posts);
     let latest_posts = res.suspend()?;
-    
-    info!("p: {:?}", latest_posts());
-    
+        
     rsx!{
         h1 {
             class: "text-lg border-l-2 border-black mb-4 mt-4 pl-1",

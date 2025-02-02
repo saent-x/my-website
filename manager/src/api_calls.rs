@@ -1,6 +1,5 @@
 use dioxus::logger::tracing::info;
-
-use crate::{models::{ApiResponse, BlogPostDTO, CategoryDTO}, prelude::*};
+use crate::{models::{ApiResponse, BlogPostDTO, CategoryDTO, MessageDTO}, prelude::*};
 
 
 pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>>{
@@ -33,6 +32,38 @@ pub async fn get_posts_count() -> ApiResponse<u32>{
         .await.unwrap_or_default()
 }
 
+pub async fn get_read_messages_count() -> ApiResponse<u32>{
+    let client = reqwest::Client::new();
+    
+    client.get(format!("{API_URL}api/messages/count"))
+        .query(&[("read", true)])
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<u32>>()
+        .await.unwrap_or_default()
+}
+
+pub async fn get_all_messages_count() -> ApiResponse<u32>{
+    let client = reqwest::Client::new();
+    
+    client.get(format!("{API_URL}api/messages/count"))
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<u32>>()
+        .await.unwrap_or_default()
+}
+
+pub async fn get_unread_messages_count() -> ApiResponse<u32>{
+    let client = reqwest::Client::new();
+    
+    client.get(format!("{API_URL}api/messages/count"))
+        .query(&[("read", false)])
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<u32>>()
+        .await.unwrap_or_default()
+}
+
 pub async fn get_posts(page: usize, page_size: usize) -> Result<ApiResponse<Vec<BlogPostDTO>>, reqwest::Error> {
     let http_client = reqwest::Client::new();
     
@@ -42,6 +73,27 @@ pub async fn get_posts(page: usize, page_size: usize) -> Result<ApiResponse<Vec<
         .await?
         .json::<ApiResponse<Vec<BlogPostDTO>>>()
         .await
+}
+
+pub async fn get_messages(page: usize, page_size: usize) -> Result<ApiResponse<Vec<MessageDTO>>, reqwest::Error> {
+    let http_client = reqwest::Client::new();
+    
+    http_client.get(format!("{API_URL}api/messages"))
+        .query(&[("page", page), ("page_size", page_size)])
+        .send()
+        .await?
+        .json::<ApiResponse<Vec<MessageDTO>>>()
+        .await
+}
+
+pub async fn get_message_by_id(uuid: String) -> ApiResponse<MessageDTO> {
+    let http_client = reqwest::Client::new();
+
+    http_client.get(format!("{API_URL}api/messages/{uuid}"))
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<MessageDTO>>()
+        .await.unwrap_or_default()
 }
 
 pub async fn get_post_by_id(uuid: String) -> Result<ApiResponse<BlogPostDTO>, reqwest::Error> {
@@ -71,6 +123,16 @@ pub async fn delete_post(id: &str) -> ApiResponse<BlogPostDTO> {
         .send()
         .await.unwrap()
         .json::<ApiResponse<BlogPostDTO>>()
+        .await.unwrap_or_default()
+}
+
+pub async fn delete_message(id: &str) -> ApiResponse<MessageDTO> {
+    let client = reqwest::Client::new();
+    
+    client.delete(format!("{API_URL}api/messages/{id}"))
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<MessageDTO>>()
         .await.unwrap_or_default()
 }
 

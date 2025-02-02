@@ -117,7 +117,7 @@ pub fn UpdateCategory() -> Element {
                     div { 
                         class: "flex flex-row mb-2 shadow-md",
                         div { 
-                            class: "flex flex-col rounded-l-md justify-center hover:scale-110 transition-transform duration-100 ease-in-out cursor-pointer text-center min-h-[40px] text-center w-[90%] bg-gray-100 shadow-2xs",
+                            class: "flex flex-col rounded-l-md justify-center hover:scale-110 transition-transform duration-100 ease-in-out cursor-pointer text-center min-h-[40px] text-center w-[90%] bg-gray-100 shadow-sm",
                             "{category.name}"
                         }
                         div { 

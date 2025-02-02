@@ -6,3 +6,4 @@ pub mod layout;
 pub mod carousel;
 pub mod footer;
 pub mod paginator;
+pub mod modal;

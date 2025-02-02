@@ -2,6 +2,7 @@
 
 @plugin "daisyui" {
     themes: lofi --default, black --prefersdark;
+    exclude: rootscrollgutter;
 }
     
 @config './tailwind.config.js';

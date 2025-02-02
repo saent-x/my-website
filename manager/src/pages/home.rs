@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use crate::{api_calls::{get_categories_count, get_posts, get_posts_count}, models::BlogPostDTO};
+use crate::{api_calls::{get_all_messages_count, get_categories_count, get_messages, get_posts, get_posts_count}, components::{messages_table::MessagesTable, posts_table::PostsTable}};
 use crate::site_router::SiteRouter;
 
 
@@ -7,16 +7,26 @@ use crate::site_router::SiteRouter;
 pub fn Home() -> Element {
     let posts_count = use_resource(get_posts_count);
     let categories_count = use_resource(get_categories_count);
+    let messages_count = use_resource(get_all_messages_count);
     
     let res = use_resource(move || async move {        
-        get_posts(1, 8)
+        get_posts(1, 5)
             .await
             .expect("[ERROR] failed to retrieve blog posts")
     });
     
+    let res_messages = use_resource(move || async move {        
+        get_messages(1, 8)
+            .await
+            .expect("[ERROR] failed to retrieve blog posts")
+    });
+        
     let no_posts = posts_count.suspend()?;
     let no_categories = categories_count.suspend()?;
+    let no_messages = messages_count.suspend()?;
+    
     let posts = res.suspend()?;
+    let messages = res_messages.suspend()?;
     
     rsx!{
         div {
@@ -86,52 +96,13 @@ pub fn Home() -> Element {
                     }
                     div { class: "stat-title", "Messages" }
                     div { class: "stat-value", 
-                        Link { class: "hover:underline", to: SiteRouter::UpdateCategory {}, "0" }
+                        Link { class: "hover:underline", to: SiteRouter::Messages {}, "{no_messages().data}" }
                     }
                 }
             }
-            Table {posts: posts().data}
-        }
-    }
-}
-
-#[component]
-fn Table(posts: Vec<BlogPostDTO>) -> Element {
-    rsx!{
-        div { 
-            class: "mt-10 w-[100%] min-w-[1200px]",
-            h1 { class: "text-xl", "Latest Posts" }
-
-            div { class: "rounded-box border border-base-content/5 bg-base-100 mt-2",
-                table { class: "table table-auto overflow-scroll",
-                    thead {
-                        tr {
-                            th {}
-                            th { "Title" }
-                            th { "Description" }
-                            th { "Categories" }
-                            th { "Date" }
-                        }
-                    }
-                    tbody {
-                        
-                        for (i, post) in posts.iter().enumerate() {
-                            tr {
-                                class: "hover:bg-base-200 cursor-pointer",
-                                th { "{i}" }
-                                td { class: "hover:underline", "{post.title}" }
-                                td { class: "truncate max-w-[500px]", "{post.description}" }
-                                td { 
-                                    for category in &post.category {
-                                        span { class: "badge badge-primary text-xs ml-1", "{category.name}" }
-                                    }
-                                }
-                                td { "{post.date}" }
-                            }
-                        }
-                    }
-                }
-            }
+            
+            MessagesTable {messages: messages().data, title: "Latest Messages"}
+            PostsTable {posts: posts().data, title: "Latest Posts"}
         }
     }
 }

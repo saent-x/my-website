@@ -1,15 +1,18 @@
 use dioxus::prelude::*;
-use crate::site_router::SiteRouter;
+use crate::{api_calls::get_unread_messages_count, site_router::SiteRouter};
 
 
 const LOGO_SVG: Asset = asset!("/assets/tor_logo.svg");
 
 #[component]
 pub fn NavBar() -> Element {
+    let unread_count = use_resource(get_unread_messages_count);
+    let no_unread_messages = unread_count.suspend()?;
+
     rsx! {
         div { class: "navbar bg-base-100 shadow-xs",
                 div { class: "flex-1",
-                    a { class: "btn btn-ghost text-xl", "Manager" }
+                    Link { class: "btn btn-ghost text-xl", to: SiteRouter::Home {}, "Manager" }
                 }
                 div { class: "flex-none",
                     ul { class: "menu menu-horizontal px-1",
@@ -17,7 +20,10 @@ pub fn NavBar() -> Element {
                             Link { to: SiteRouter::Home {}, "Dashboard" }
                         }
                         li {
-                            a { "Inbox" }
+                            Link { 
+                                to: SiteRouter::Messages {}, "Inbox",
+                                div { class: "badge badge-sm badge-secondary", "{no_unread_messages().data}" }
+                            }
                         }
                         li {
                             details {

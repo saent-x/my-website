@@ -1,4 +1,4 @@
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, Default, Deserialize)]
 pub struct CategoryDTO {
@@ -15,6 +15,13 @@ pub struct BlogPostDTO {
     pub description: String,
     pub category: Vec<CategoryDTO>,
     pub content: Option<String>
+}
+
+#[derive(Debug, Default, Clone, Deserialize, Serialize)]
+pub struct ContactFormDTO {
+    pub name: String,
+    pub email: String,
+    pub content: String
 }
 
 #[derive(Default, Debug, Clone, Deserialize)]

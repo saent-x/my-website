@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use web_sys::{window, Element as WebElement, ScrollIntoViewOptions};
+use web_sys::{window, ScrollIntoViewOptions};
 
 
 #[component]

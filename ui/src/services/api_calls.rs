@@ -1,5 +1,5 @@
 use dioxus::logger::tracing::info;
-use crate::{models::dtos::{ApiResponse, BlogPostDTO, CategoryDTO}, prelude::*};
+use crate::{models::dtos::{ApiResponse, BlogPostDTO, CategoryDTO, ContactFormDTO}, prelude::*};
 
 // TODO: Change to 
 pub async fn get_posts_count() -> ApiResponse<u32> {
@@ -19,6 +19,17 @@ pub async fn get_categories() -> ApiResponse<Vec<CategoryDTO>> {
         .send()
         .await.unwrap()
         .json::<ApiResponse<Vec<CategoryDTO>>>()
+        .await.unwrap_or_default()
+}
+
+pub async fn add_message(contact_form: ContactFormDTO) -> ApiResponse<ContactFormDTO> {
+    let client = reqwest::Client::new();
+    
+    client.post(format!("{API_URL}api/messages"))
+        .json(&contact_form)
+        .send()
+        .await.unwrap()
+        .json::<ApiResponse<ContactFormDTO>>()
         .await.unwrap_or_default()
 }
 
