@@ -2,7 +2,6 @@ use gloo_timers::callback::Timeout;
 use dioxus:: prelude::*;
 use crate::api_calls::{add_category, delete_category, get_categories};
 use crate::components::alert::{Alert, AlertType};
-use crate::prelude::*;
 use web_sys;
 
 

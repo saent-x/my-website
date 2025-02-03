@@ -16,7 +16,7 @@ pub fn BlogPostPage(blog_post_id: ReadOnlySignal<String>) -> Element {
     rsx!(
         div { 
             id: "blog_post",
-            class: "no-tailwindcss p-10 lg:p-0 lg:w-[55%]",
+            class: "no-tailwindcss markdown w-[90%] md:w-[90%] lg:w-[55%]",
             dangerous_inner_html: render_md_to_html
         }
     )

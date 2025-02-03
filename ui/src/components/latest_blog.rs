@@ -18,7 +18,6 @@ pub fn LatestBlog() -> Element {
 
          div {
             class: "flex flex-col overflow-auto w-full",
-            
             for post in latest_posts().data {
                 BlogContainer { uuid: &post.uuid, title: &post.title, description: &post.description }
             }
@@ -35,14 +34,13 @@ pub fn LatestBlog() -> Element {
     }
 }
 
-/// BlogContainer holds the individual blog post information
 #[component]
 fn BlogContainer(uuid: String, title: String, description: String) -> Element {
     rsx!{
-        div { class: "card card-side bg-base-200 shadow-sm lg:h-48 mb-4",
+        div { class: "card card-side flex-col-reverse max-h-[600px] h-[400px] lg:max-h-60 md:max-h-60 lg:flex-row md:flex-row bg-base-200 shadow-sm lg:h-48 mb-4",
               div { class: "card-body",
                   h2 { class: "card-title", "{title}" }
-                  p { "{description}" }
+                  p { class: "text-sm md:text-base lg:text-base text-justify", "{description}" }
                   div { class: "card-actions justify-start",
                       Link {
                           to: SiteRoute::BlogPostPage { blog_post_id: uuid },
@@ -55,7 +53,7 @@ fn BlogContainer(uuid: String, title: String, description: String) -> Element {
                   img {
                       src: TMP_IMAGE,
                       alt: "blog post",
-                      class: "lg:max-w-[10px]"
+                      class: "lg:max-w-[10px] lg:h-60"
                   }
               }
           }

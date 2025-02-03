@@ -36,11 +36,11 @@ pub fn BlogPage() -> Element {
     rsx! {
         div {
             id: "blog-top",
-            class: "w-[55%]",
+            class: "w-[90%] md:w-[90%] lg:w-[55%]",
             h1 { class: "text-5xl mb-5", "Blog" }
 
             div { 
-                class: "flex flex-row w-[100%] gap-2 mb-4",
+                class: "flex flex-row flex-wrap w-[100%] gap-2 mb-4",
                 form { style: "display:contents",
                     for category in categories().data {
                         input { r#type: "checkbox", class: "btn-sm", name: "categories", "aria-label": "{category.name}", class: "btn" }
@@ -95,7 +95,7 @@ fn Category(name: String) -> Element {
 #[component]
 fn BlogPostItem(uuid: String, title: String, description: String, categories: Vec<CategoryDTO>) -> Element {
     rsx!{
-        div { class: "card card-side bg-base-200 shadow-sm lg:h-50 mb-4 min-w-full w-full",
+        div { class: "card card-side flex-col-reverse max-h-[600px] h-[400px] lg:max-h-60 md:max-h-60 lg:flex-row md:flex-row bg-base-200 shadow-sm lg:h-50 mb-4 min-w-full w-full",
               div { class: "card-body",
                   div { 
                         class: "flex flex-row",
@@ -104,7 +104,7 @@ fn BlogPostItem(uuid: String, title: String, description: String, categories: Ve
                         }
                     }
                   h2 { class: "card-title", "{title}" }
-                  p { "{description}" }
+                  p { class: "text-sm md:text-base lg:text-base", "{description}" }
                   div { class: "card-actions justify-start",
                       Link {
                           to: SiteRoute::BlogPostPage { blog_post_id: uuid },
@@ -115,6 +115,7 @@ fn BlogPostItem(uuid: String, title: String, description: String, categories: Ve
               
               figure {
                   img {
+                      class: "lg:max-w-[10px] lg:h-60",
                       src: TMP_IMAGE,
                       alt: "blog post",
                   }

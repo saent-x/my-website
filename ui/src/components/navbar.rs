@@ -7,15 +7,31 @@ const LOGO_SVG: Asset = asset!("/assets/tor_logo.svg");
 #[component]
 pub fn Navbar() -> Element {    
     rsx! {
-        div { class: "navbar bg-base-100 shadow-md sticky mb-5",
-                div { class: "flex-1",
-                    Link { 
-                        to: SiteRoute::HomePage {},
-                        class: "btn btn-ghost text-xl", "tor.dev"
+        
+        div { class: "navbar bg-base-100 shadow-sm mb-5",
+            div { class: "navbar-start",
+                div { class: "dropdown",
+                    div {
+                        role: "button",
+                        tabindex: "0",
+                        class: "btn btn-ghost lg:hidden",
+                        svg {
+                            fill: "none",
+                            "viewBox": "0 0 24 24",
+                            stroke: "currentColor",
+                            xmlns: "http://www.w3.org/2000/svg",
+                            class: "h-5 w-5",
+                            path {
+                                "stroke-width": "2",
+                                "stroke-linejoin": "round",
+                                "stroke-linecap": "round",
+                                d: "M4 6h16M4 12h8m-8 6h16",
+                            }
+                        }
                     }
-                }
-                div { class: "flex-none",
-                    ul { class: "menu menu-horizontal px-1",
+                    ul { 
+                        tabindex: "0",
+                        class: "menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow",
                         li { 
                             Link {
                                 to: SiteRoute::HomePage{},
@@ -44,6 +60,41 @@ pub fn Navbar() -> Element {
                         ThemeSwitch { }
                     }
                 }
+                Link { 
+                    to: SiteRoute::HomePage {},
+                    class: "btn btn-ghost text-xl", "tor.dev"
+                }
+            }
+            div { class: "navbar-end hidden lg:flex",
+                ul { class: "menu menu-horizontal px-1",
+                    li { 
+                        Link {
+                            to: SiteRoute::HomePage{},
+                            "Home"
+                        }  
+                    }
+                    li { 
+                        Link {
+                            to: SiteRoute::BlogPage{},
+                            "Blog"
+                        }
+                    }
+                    li { 
+                        Link {
+                            to: SiteRoute::AboutPage{},
+                            "About"
+                        }
+                    }
+                    li { 
+                        Link {
+                            to: SiteRoute::ContactPage{},
+                            "Contact"
+                        }
+                    }
+                    
+                    ThemeSwitch { }
+                }
+            }
         }
     }
 }

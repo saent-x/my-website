@@ -7,13 +7,13 @@ fn Hero() -> Element {
         // Hero
         div {
             id: "hero",
-            class: "w-[55%]",
+            class: "w-[90%] md:w-[90%] lg:w-[55%]",
             HeroContent {  }
         }
 
         // Featured Projects and Blog Posts
         div { 
-            class: "w-[55%] mt-4",
+            class: "w-[90%] md:w-[90%] lg:w-[55%] mt-4",
 
             LatestProject {}
             LatestBlog {}

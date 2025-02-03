@@ -1,6 +1,7 @@
 pub mod blog_handler;
 pub mod category_handler;
 pub mod message_handler;
+pub mod website_info_handler;
 
 use std::sync::Arc;
 
