@@ -1,0 +1,56 @@
+title = "Website Info"
+
+[profile]
+name = ""
+job_title = ""
+about_me = ""
+resume_link = ""
+home_page_info = ""
+skills = ""
+
+[[projects]]
+name = ""
+description = ""
+link = ""
+img_url = ""
+
+[[projects]]
+name = ""
+description = ""
+link = ""
+img_url = ""
+
+[[projects]]
+name = ""
+description = ""
+link = ""
+img_url = ""
+
+[[work_experience]]
+job_title = ""
+company = ""
+from = ""
+to = ""
+
+[[work_experience]]
+job_title = ""
+company = ""
+from = ""
+to = ""
+
+[[work_experience]]
+job_title = ""
+company = ""
+from = ""
+to = ""
+
+[[work_experience]]
+job_title = ""
+company = ""
+from = ""
+to = ""
+
+[[socials]]
+name = ""
+image_url = ""
+link = ""

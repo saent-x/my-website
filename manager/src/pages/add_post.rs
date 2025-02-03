@@ -110,7 +110,8 @@ pub fn AddBlogPost() -> Element {
             class: "w-[55%] m-auto",
             
             h1 { class: "text-2xl text-black mt-5 mb-10", "Add New BlogPost" }
-    
+            Alert{ alert_type: AlertType::Warning, show: add_error(), message: err_message() }
+            Alert{ alert_type: AlertType::Success, show: add_success(), message: success_message() }
             div {
                 class: "flex flex-row justify-between mb-5",
                 
@@ -209,9 +210,6 @@ pub fn AddBlogPost() -> Element {
 
             div { 
                 class: "pt-2",
-                Alert{ alert_type: AlertType::Warning, show: add_error(), message: err_message() }
-                Alert{ alert_type: AlertType::Success, show: add_success(), message: success_message() }
-                 
                 button { 
                     class: "btn p-4 mt-2 mb-10 cursor-pointer rounded-md shadow-2xs text-xs text-white bg-gray-800",
                     onclick: on_submit,

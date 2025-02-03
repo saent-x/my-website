@@ -5,6 +5,7 @@ use axum::{ extract::{rejection::{JsonRejection, PathRejection}, Path, Query, St
 use chrono::Local;
 use regex::Regex;
 use serde_json::{json, Value};
+use surrealdb::opt::PatchOp;
 
 use crate::{db::Database, models::blog_schema::BlogPostSchema};
 
@@ -42,10 +43,17 @@ pub async fn get_category_by_id(State(db): State<Arc<Database>>, id: Result<Path
 
 pub async fn delete_category_by_id(State(db): State<Arc<Database>>, id: Result<Path<String>, PathRejection>) -> Result<Json<Value>, ApiError>{
     let path = id.map_err(|e| ApiError::InvalidRequest(e.to_string()))?;
-    let record: Option<CategorySchema> = db.client.delete(("categories", path.0)).await?;
+    let record: Option<CategorySchema> = db.client.delete(("categories", &path.0)).await?;
+    let query = format!(r#"
+        UPDATE blog_posts SET category = category[WHERE uuid != "{}"] 
+        WHERE category.*.uuid CONTAINS "{}"
+        "#, path.0, path.0);
     
     match record {
-        Some(r) => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r))),
+        Some(r) => {
+            db.client.query(query).await?;
+            Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), r)))
+        },
         None => Ok(Json(util::gen_response(ResponseStatusType::Success("200".to_string()), "category not found")))
     }
 }
