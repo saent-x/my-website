@@ -1,0 +1,53 @@
+title = "Website Info"
+
+[profile]
+
+name = "Vangerwua Johnpaul Tor"
+job_title = "Full Stack Engineer"
+about_me = "I’m JP, a Software Engineer with 6+ years of experience in software development and cybersecurity. I specialize in creating secure and scalable solutions. Passionate about solving complex problems and pushing the boundaries of technology. Always eager to take on new challenges and collaborate on innovative projects. Let’s connect!"
+resume_link = ""
+home_page_info = "Welcome to my digital space! I'm excited to share my life experiences and professional journey as a Software Engineer. Dive in to explore my projects, tips, and the latest trends in tech. Enjoy your visit, find inspiration, and stay connected! 🌟"
+skills = "c#,typescript,nodejs,rust,python,go,CI/CD,react,cloud,sql,no-sql,asp.net,docker"
+
+[[projects]]
+name = "In Vehicle Anomaly Detection System"
+description = "An in-vehicle anomaly detection system designed to identify anomalies in CAN networks utilizing feed forward neural networks"
+link = "https://github.com/saent-x/nn-anomaly-detection"
+img_url = "https://example.com/item1.jpg"
+
+[[projects]]
+name = "Neural Network Library in Go"
+description = "A Go (Golang) implementation of a neural network, inspired by the concepts in the book Neural Networks from Scratch in Python by Sentdex."
+link = "https://example.com/item1"
+img_url = "https://example.com/item1.jpg"
+
+[[projects]]
+name = "St Faus"
+description = "A music player that generates a playlist with AI based on a description"
+link = "https://example.com/item1"
+img_url = "https://example.com/item1.jpg"
+
+
+[[work_experience]]
+job_title = "Security & Software Engineer"
+company = "Tata Technologies"
+from = "Oct 2022"
+to = "Present"
+
+[[work_experience]]
+job_title = "Senior Software Engineer"
+company = "Analytics Intelligence"
+from = "Nov 2019"
+to = "Sept 2022"
+
+[[work_experience]]
+job_title = "Fullstack Software Engineer"
+company = "KPMG"
+from = "Oct 2018"
+to = "Oct 2019"
+
+[[work_experience]]
+job_title = "Fullstack Software Engineer"
+company = "Vatebra Technologies"
+from = "Aug 2017"
+to = "Sept 2018"
