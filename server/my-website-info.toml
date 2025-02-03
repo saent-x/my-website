@@ -17,7 +17,7 @@ img_url = "https://example.com/item1.jpg"
 
 [[projects]]
 name = "Neural Network Library in Go"
-description = "A Go (Golang) implementation of a neural network, inspired by the concepts in the book Neural Networks from Scratch in Python by Sentdex."
+description = "A Golang implementation of a neural network, inspired by the concepts in the book Neural Networks from Scratch in Python by Sentdex."
 link = "https://example.com/item1"
 img_url = "https://example.com/item1.jpg"
 
@@ -51,3 +51,8 @@ job_title = "Fullstack Software Engineer"
 company = "Vatebra Technologies"
 from = "Aug 2017"
 to = "Sept 2018"
+
+[[socials]]
+name = ""
+image_url = ""
+link = ""
