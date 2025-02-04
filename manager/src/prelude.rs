@@ -7,6 +7,7 @@ pub const TAILWIND_CSS: Asset = asset!("/assets/tailwind.css");
 pub const LOADING_SPINNER: Asset = asset!("/assets/infinite-spinner.svg");
 
 pub const API_URL: &str = env!("API_URL");
+pub const API_KEY: &str = env!("API_KEY");
 
 pub fn get_current_theme() -> String {
     window()

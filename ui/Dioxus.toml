@@ -6,7 +6,7 @@ name = "my-website"
 [web.app]
 
 # HTML title tag content
-title = "my-website"
+title = "devtor"
 
 # include `assets` in web platform
 [web.resource]

@@ -10,6 +10,7 @@ COPY . .
 RUN cargo install cargo-binstall --locked
 RUN cargo binstall dioxus-cli
 ARG API_URL
+ARG API_KEY
 RUN dx bundle --release --platform web
 
 
