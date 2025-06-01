@@ -5,6 +5,7 @@
 /core/target
 .DS_Store
 .env
+/.cargo
 *.toml
 !**/Cargo.toml
 /ui/Caddyfile
