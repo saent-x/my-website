@@ -9,7 +9,6 @@ pub fn Layout() -> Element {
             class: "w-[100%] bg-base-100",
             "data-theme": "lofi",
             div { 
-                class: "",
                 NavBar {}
             }
             Outlet::<SiteRouter>{}

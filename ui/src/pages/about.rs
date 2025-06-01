@@ -42,7 +42,7 @@ pub fn AboutPage() -> Element {
                 class: "mt-10",
                 h1 { class: "text-lg", "Experience" },
                 for experience in website_info().data.work_experience {
-                    ExperienceItem { job_title: experience.job_title, company: experience.company, from: experience.from, to: experience.to }
+                    ExperienceItem { job_title: experience.job_title, company: experience.company, from: experience.from, to: experience.to, resume_link: website_info().data.profile.resume_link }
                 }
              }
         }
@@ -50,7 +50,7 @@ pub fn AboutPage() -> Element {
 }
 
 #[component]
-fn ExperienceItem(job_title: String, company: String, from: String, to: String) -> Element {
+fn ExperienceItem(job_title: String, company: String, from: String, to: String, resume_link: String) -> Element {
     rsx!{
         div { 
             class: "flex flex-row justify-between mb-5 mt-5",
@@ -76,7 +76,11 @@ fn ExperienceItem(job_title: String, company: String, from: String, to: String) 
                  }
              }, 
              
-            button { class: "btn btn-sm btn-accent cursor-pointer", "More Info" } // downloads resume from s3
+            a { 
+                href: resume_link,
+                class: "btn btn-sm btn-accent cursor-pointer",
+                "More Info"
+            }
 
          }
     }

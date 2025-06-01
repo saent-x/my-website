@@ -7,6 +7,7 @@ pub struct WebsiteInfoDTO {
     pub profile: Profile,
     pub projects: Vec<Project>,
     pub work_experience: Vec<WorkExperience>,
+    pub socials: Vec<Social>
 }
 
 #[derive(Default, Clone, Debug, Deserialize)]
@@ -33,6 +34,13 @@ pub struct WorkExperience {
     pub company: String,
     pub from: String,
     pub to: String,
+}
+
+#[derive(Default, Clone, Debug, Deserialize, Serialize)]
+pub struct Social {
+    pub name: String,
+    pub img_url: String,
+    pub link: String
 }
 
 #[derive(Clone, Debug, PartialEq, Default, Deserialize)]

@@ -8,7 +8,7 @@ use crate::{error::ApiError, models::website_info_schema::WebsiteInfo, prelude::
 pub fn read_website_info() -> Result<WebsiteInfo, Box<dyn Error>> {
     let toml_str = fs::read_to_string("my-website-info.toml").expect("Failed to read file");
     let result: WebsiteInfo = toml::from_str(&toml_str)?;
-    
+    println!("{:?}", result);
     Ok(result)
 }
 

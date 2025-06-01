@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use crate::{components::carousel::Carousel, services::api_calls::get_website_info};
+use crate::{components::carousel::Carousel, prelude::API_URL, services::api_calls::get_website_info};
 
 
 #[component]
@@ -8,7 +8,7 @@ pub fn LatestProject() -> Element{
     let website_info = website_info_res.suspend()?;
     
     let projects = website_info().data.projects.iter()
-        .map(|project| rsx!{ProjectContainer { name: &project.name, description: &project.description }})
+        .map(|project| rsx!{ProjectContainer { name: &project.name, description: &project.description, img_url: &project.img_url, project_url: &project.link }})
         .collect();
     
     rsx!{
@@ -27,25 +27,25 @@ pub fn LatestProject() -> Element{
     }
 }
 
-const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 
 #[component]
-fn ProjectContainer(name: String, description: String) -> Element {
+fn ProjectContainer(name: String, description: String, img_url: String, project_url: String) -> Element {
     rsx!{
-        div { class: "card card-side flex-col-reverse lg:flex-row md:flex-row bg-base-200 shadow-sm lg:h-48 mb-2 min-w-full w-full",
+        div { class: "card card-side flex-col-reverse lg:flex-row md:flex-row max-h-[600px] h-[400px] bg-base-200 shadow-sm lg:h-48 mb-2 min-w-full w-full",
               div { class: "card-body",
                   h2 { class: "card-title", "{name}" }
                   p { class: "text-sm md:text-base lg:text-base text-justify md:max-w-[530px]", "{description}" }
                   div { class: "card-actions justify-start",
-                      button { class: "btn btn-sm btn-accent", "View Project" }
+                      a { href: project_url, class: "btn btn-sm btn-accent", "View Project" }
                   }
               }
               
               figure {
+                  class: "lg:h-48 md:h-48 lg:w-48 md:w-48",
                   img {
-                      class: "lg:max-w-[300px] md:max-w-[300px] lg:h-60 h-60",
-                      src: TMP_IMAGE,
-                      alt: "blog post",
+                      class: "object-fill",
+                      src: format!("{}/static{}", API_URL, img_url),
+                      alt: "project",
                   }
               }
          }

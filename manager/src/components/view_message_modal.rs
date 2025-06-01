@@ -3,7 +3,11 @@ use crate:: models::MessageDTO;
 
 
 #[component]
-pub fn ViewMessageModal(contact_form: ReadOnlySignal<MessageDTO>, uuid: ReadOnlySignal<String>, show: ReadOnlySignal<bool>, on_close: EventHandler) -> Element {    
+pub fn ViewMessageModal(
+    contact_form: ReadOnlySignal<MessageDTO>, 
+    uuid: ReadOnlySignal<String>, 
+    show: ReadOnlySignal<bool>, 
+    on_close: EventHandler) -> Element {    
     rsx!{
         div { 
             dialog { 

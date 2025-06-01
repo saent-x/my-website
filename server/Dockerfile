@@ -8,6 +8,7 @@ FROM debian:bullseye-slim AS server
 
 WORKDIR /app
 COPY --from=builder /app/target/release/server .
+COPY my-website-info.toml .
 
 EXPOSE 8000
 CMD [ "./server" ]

@@ -1,13 +1,15 @@
 use dioxus::prelude::*;
 use chrono::prelude::*;
 
-const GITHUB_IMG: Asset = asset!("/assets/github.png");
-const DISCORD_IMG: Asset = asset!("/assets/discord.png");
-const LINKEDIN_IMG: Asset = asset!("/assets/linkedin.png");
+use crate::{prelude::API_URL, services::api_calls::get_website_info};
+
 
 #[component]
 pub fn Footer() -> Element {
     let current_year = Utc::now().year();
+    
+    let website_info_res = use_resource(get_website_info);
+    let website_info = website_info_res.suspend()?;
 
     rsx!{
         div { 
@@ -16,19 +18,14 @@ pub fn Footer() -> Element {
             div { 
                 class: "flex flex-row justify-center mt-2 mb-4",
                 
-                Link {
-                    to: "https://github.com/saent-x",
-                    img { class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", src: GITHUB_IMG }                    
-                }
-                
-                // Link {
-                //     to: "",
-                //     img { class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", src: DISCORD_IMG }
-                // }
-                
-                Link {
-                    to: "https://www.linkedin.com/in/vanjp/",
-                    img { class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", src: LINKEDIN_IMG }
+                for social in website_info().data.socials {
+                    Link {
+                        to: "{social.link}",
+                        img { 
+                            class: "h-6 w-6 mr-2 cursor-pointer hover:scale-125 transition-transform duration-300 ease-in-out", 
+                            src: format!("{}/static{}",API_URL, social.img_url)
+                        }              
+                    }
                 }
             }
          }

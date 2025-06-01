@@ -1,12 +1,11 @@
 use dioxus::{logger::tracing::info, prelude::*};
 
-use crate::{services::api_calls::get_latest_posts, site_router::SiteRoute};
+use crate::{prelude::API_URL, services::api_calls::get_latest_posts, site_router::SiteRoute};
 
 const TMP_IMAGE: Asset = asset!("/assets/tmp_img.png");
 
 #[component]
 pub fn LatestBlog() -> Element {
-    
     let res = use_resource(get_latest_posts);
     let latest_posts = res.suspend()?;
         
@@ -50,10 +49,11 @@ fn BlogContainer(uuid: String, title: String, description: String) -> Element {
               }
               
               figure {
+                  class: "lg:h-48 md:h-48 lg:w-48 md:w-48",
                   img {
-                      src: TMP_IMAGE,
+                      class: "object-fill",
+                      src: format!("{}/static/blog-post.png", API_URL),
                       alt: "blog post",
-                      class: "lg:max-w-[10px] lg:h-60"
                   }
               }
           }

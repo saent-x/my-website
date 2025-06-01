@@ -6,6 +6,13 @@ use crate::error::ApiError;
 
 
 pub async fn guard(req: Request, next: Next) -> Result<Response, ApiError> {
+    // split uri by / with the first value being static ... or
+    let req_uri =  req.uri().clone().to_string();
+    let paths: Vec<_> = req_uri.split("/").collect();
+    
+    if req.uri() == "/health" || paths[1] == "static" {
+        return Ok(next.run(req).await);
+    }
     let api_key = req.headers()
         .get("API_KEY")
         .and_then(|h| h.to_str().ok())

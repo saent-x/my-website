@@ -9,7 +9,7 @@ pub fn HeroContent() -> Element{
     
     rsx!{
         div { class: "hero bg-base-200 shadow-md",
-               div { class: "hero-content flex-col lg:flex-row shadow-md",
+               div { class: "hero-content flex-col lg:flex-row",
                    img {
                        src: TOR_IMAGE,
                        class: "size-30 md:size-52 lg:size-52 rounded-lg shadow-2xl",

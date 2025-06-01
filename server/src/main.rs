@@ -14,7 +14,7 @@ use db::Database;
 use dotenv::dotenv;
 use handlers::{blog_handler::{create_blog_post, delete_blog_post_by_id, get_blog_post_by_id, get_blog_posts, get_latest_posts, get_total_posts_count, update_blog_post_by_id}, category_handler::{create_category, delete_category_by_id, get_categories, get_category_by_id, get_total_categories_count}, health_check, message_handler::{create_message, delete_message_by_id, get_all_messages, get_message_by_id, get_total_messages_count, update_message_by_id}, website_info_handler::get_website_info};
 use middleware_handler::guard;
-use tower_http::{cors::CorsLayer, trace::TraceLayer};
+use tower_http::{cors::CorsLayer, services::ServeDir, trace::TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
@@ -58,6 +58,8 @@ async fn main() -> surrealdb::Result<()> {
 }
 
 async fn load_router(app_state: Arc<Database>, cors: CorsLayer) -> Router {
+    let static_files = ServeDir::new("./assets");
+    
     Router::new()
         .route("/health", get(health_check))
         .route("/blog", post(create_blog_post).get(get_blog_posts))
@@ -71,6 +73,7 @@ async fn load_router(app_state: Arc<Database>, cors: CorsLayer) -> Router {
         .route("/messages/:id", get(get_message_by_id).delete(delete_message_by_id).post(update_message_by_id))
         .route("/messages/count", get(get_total_messages_count))
         .route("/website_info", get(get_website_info))
+        .nest_service("/static", static_files)
         .route_layer(middleware::from_fn(middleware_handler::guard))
         .with_state(app_state)
         .layer(cors)

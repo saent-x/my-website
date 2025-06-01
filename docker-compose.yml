@@ -32,6 +32,8 @@ services:
       - SURREAL_PASSWORD=$SURREAL_PASSWORD
       - SURREAL_NAMESPACE=$SURREAL_NAMESPACE
       - UI_URL=$UI_URL
+      - MANAGER_URL=$MANAGER_URL
+      - API_KEY=$API_KEY
     ports:
       - 8000:8000
     networks:

@@ -1,0 +1,12 @@
+SURREAL_REMOTE_URL=wss://my-website-inst-069usvspjhpu11521uicp7pop0.aws-euw1.surreal.cloud
+SURREAL_DB=website-db
+SURREAL_USER=root
+SURREAL_PASSWORD=john9@UL
+SURREAL_NAMESPACE=my-website-instance
+
+API_URL=http://127.0.0.1:8000
+UI_URL=http://127.0.0.1:8080
+MANAGER_URL=http://127.0.0.1:8080
+API_KEY=huudu^^wdt+=fyy6e--25727%ubvsv62sbu)biubdi__qby837(*87398eghub
+
+WEBSITE_ENV=production
